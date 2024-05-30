@@ -1,5 +1,5 @@
 import { sepolia as vsepolia } from "viem/chains";
-import {Chain} from "./chain.js";
+import {Chain} from "../chain.js";
 
 
 export const sepolia: Chain = {

@@ -1,6 +1,6 @@
 import type {Chain} from "./chain.js";
-import {eth} from "./eth.js";
-import {sepolia} from "./sepolia.js";
+import {eth} from "./eip155/eth.js";
+import {sepolia} from "./eip155/sepolia.js";
 import {solana, solanadev} from "./solana.js";
 
 export const ALL_CHAINS: Chain[] = [
