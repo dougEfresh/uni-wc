@@ -14,12 +14,12 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
-    "viem": "^2.12.5"
+    "viem": "*"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "*",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "typescript": "^5"

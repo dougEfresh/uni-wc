@@ -7,3 +7,4 @@ export const sepolia: Chain = {
 	namespace: "eip155",
 	vchain: vsepolia,
 };
+

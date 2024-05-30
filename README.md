@@ -1,0 +1,12 @@
+    "@celo/wallet-base": "^5.1.1",
+    "@ethereumjs/tx": "^3.5.2",
+    "@kadena/client": "^0.5.0",
+    "@kadena/cryptography-utils": "^0.4.0",
+    "@kadena/types": "^0.6.0",
+    "@multiversx/sdk-core": "12.18.0",
+    "@multiversx/sdk-wallet": "4.2.0",
+    "@polkadot/util": "10.4.2",
+    "@polkadot/util-crypto": "^10.1.2",
+    "@solana/web3.js": "^1.36.0",
+    "@walletconnect/encoding": "^1.0.1",
+    "@walletconnect/sign-client": "2.13.0"
