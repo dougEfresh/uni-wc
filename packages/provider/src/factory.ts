@@ -1,9 +1,12 @@
-import { UniversalProvider }   from '@walletconnect/universal-provider';
+import { UniversalProvider, default as Provider }   from '@walletconnect/universal-provider';
 import { UniversalProviderOpts } from '@walletconnect/universal-provider'
+import {ISessionFactory, SessionFactory} from "./session/index.js";
+
 
 export class UniversalProviderFactory {
-	protected static provider: any
-	protected static providerOpts: UniversalProviderOpts
+	protected static provider: Provider;
+	protected static session: ISessionFactory;
+	protected static providerOpts: UniversalProviderOpts;
 
 	public static configure(providerOpts: UniversalProviderOpts) {
 		UniversalProviderFactory.providerOpts = providerOpts;
@@ -50,4 +53,20 @@ export class UniversalProviderFactory {
 			//setAddress('')
 		})
 	}
+
+	public static sessionFactory(): ISessionFactory | undefined {
+		if (!UniversalProviderFactory.session) {
+			if (!UniversalProviderFactory.provider) {
+				return undefined;
+			}
+			//TODO check if connected
+			if (!UniversalProviderFactory.provider.session) {
+				return undefined;
+			}
+			UniversalProviderFactory.session = SessionFactory.create(UniversalProviderFactory.provider);
+		}
+
+		return UniversalProviderFactory.session;
+	}
 }
+

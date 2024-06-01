@@ -1,64 +1,25 @@
-import select, { Separator } from '@inquirer/select';
-import {UniversalProviderFactory} from "@uni-wc/provider";
-import UniversalProvider, {IProvider} from "@walletconnect/universal-provider";
-import  bs88  from 'bs58';
-import Eip155Provider from "@walletconnect/universal-provider/dist/types/providers/eip155";
-import {solana} from "@uni-wc/chains";
-
-async function eth_sign(provider: UniversalProvider) {
-	console.log("signing...check your wallet for approval");
-	const chainProvider: Eip155Provider | undefined = provider.rpcProviders['eip155'] as Eip155Provider;
-	if (chainProvider) {
-		const address = chainProvider.requestAccounts()[0];
-		console.log(address);
-		try {
-
-		let sig = await provider.request({
-			method: "personal_sign",
-			params: ["0xabcdef", address]
-		}, `eip155:${chainProvider.chainId}`);
-			console.log(JSON.stringify(sig));
-	} catch (e) {
-			console.error(e);
-		}
-
-	}
-}
-async function sol_sign(provider: UniversalProvider) {
-	let b58 = bs88.encode(Buffer.from("universe"));
-	const chainProvider: IProvider | undefined = provider.rpcProviders['solana'] as IProvider;
-	const address = chainProvider.requestAccounts()[0];
-	try {
-		let sig = await provider.request({
-			method: "solana_signMessage",
-			params: {
-				message: b58,
-				pubkey: address
-			}
-		}, solana.id);
-		console.log(JSON.stringify(sig));
-	} catch(e) {
-		console.error(e);
-	}
-
-}
+import { select, Separator } from '@inquirer/prompts';
+import UniversalProvider  from "@walletconnect/universal-provider";
+import {UniversalProviderFactory, ISessionFactory, IEipSession} from "@uni-wc/provider";
+import {chainById} from "@uni-wc/chains";
+import {Address} from "viem";
+import {handle_solana} from "./solana.js";
 
 
 export async function displayMenu(): Promise<void> {
 	const provider: UniversalProvider = await UniversalProviderFactory.getProvider();
-	const answer = await select({
-		message: 'Choose your path',
-		choices: [
-			{
-				name: 'accounts',
-				value: 'accounts',
-				description: 'show your accounts',
-			},
-			{
-				name: 'sign message',
-				value: 'signmessage',
-				description: 'sign a message',
-			},
+	if (!UniversalProviderFactory.sessionFactory()) {
+		throw new Error("session not initialized");
+	}
+	const session: ISessionFactory  = UniversalProviderFactory.sessionFactory()!;
+	const choices: any[] = session.chains.map((c) => {
+		return {
+			name: c.vchain.name,
+			value: c.id,
+			description: 'Explore ' + c.vchain.name,
+		}
+	});
+	choices.push(
 			new Separator(),
 			{
 				name: 'ping',
@@ -66,32 +27,40 @@ export async function displayMenu(): Promise<void> {
 				description: 'ping session',
 			},
 			{
-				name: 'disconnect',
-				value: 'disconnect',
-				description: 'clear session',
-			},
-			{
 				name: 'pair',
 				value: 'pair',
 				description: 'repair',
 			},
+		{
+			name: 'disconnect',
+			value: 'disconnect',
+			description: 'clear session',
+		},
+
 			{
 				name: 'exit',
 				value: 'exit',
 				description: 'end',
 			},
-		],
+	);
+
+	const answer: string = await select({
+		message: 'Choose your path',
+		choices: choices,
 	});
+
 	switch (answer) {
 		case 'ping':
-			let p = provider.client.core.pairing.getPairings()[0];
-			await provider.client.ping({topic: p.topic});
+			await session.ping();
 			break;
 		case 'disconnect':
 			console.log('Disconnecting...');
 			await provider.disconnect();
 			break;
-		case 'accounts':
+		case 'chains':
+			session.chains.forEach((c) => {
+				console.log(`${c.vchain.name}}` )
+			});
 			for (const [ns, p] of Object.entries(provider.rpcProviders)) {
 				p.requestAccounts().forEach((a) => {
 					console.log(`${ns} ${a}`);
@@ -101,17 +70,67 @@ export async function displayMenu(): Promise<void> {
 		case 'pair':
 			await provider.pair(undefined);
 			break;
-		case 'signmessage':
-			await eth_sign(provider);
-			await sol_sign(provider);
-			break;
 		case 'exit':
 			process.exit();
 			break;
 		default:
-			console.log('Invalid choice', answer);
+			const chain  = chainById(answer);
+			if (!chain) {
+				console.log('Invalid choice', answer);
+				break;
+			}
+			const eipSession = session.eip(chain.id);
+			if (eipSession) {
+				await handle_eip_chain(eipSession);
+				break;
+			}
+			const sol = session.solana();
+			if (sol) {
+				await handle_solana(sol);
+			}
 			break;
 	}
 	// Go back to the main menu
 	displayMenu();
+}
+
+
+
+async function handle_eip_chain(session: IEipSession) {
+
+	while (true) {
+		const answer = await select({
+			message: 'Choose your path',
+			choices: [
+				{
+					name: "Sign Message",
+					value: "message",
+					description: "",
+				},
+				new Separator(),
+				{
+					name: "back",
+					value: "back",
+				}
+			],
+		});
+
+		switch(answer) {
+		case'message':
+			try {
+				const sig = await session.wc.signMessage({
+					account: session.account as Address,
+					message: 'yo, sup.'
+				});
+				console.log("Sig " , sig);
+			} catch(e) {
+				console.error(e);
+			}
+			break
+		case 'back':
+			return
+		default:
+			return
+		}
+	}
 }

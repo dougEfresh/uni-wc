@@ -77,13 +77,14 @@ export async function main() {
 		pairingTopic: undefined,
 		skipPairing: true // optional to skip pairing ( later it can be resumed by invoking .pair())
 	})
-	const pairings = provider.client.core.pairing.getPairings();
-	if (pairings.length > 0) {
-		const partner = pairings[0];
-		console.log("found existing topic ", partner.topic);
-	} else {
+	if (!provider.session) {
 		console.log("new pairing");
 		await provider.pair(undefined);
 	}
+	console.log(JSON.stringify(provider.session));
+	await provider.enable();
+	await provider.client.ping({
+		topic: provider.session!.topic
+	});
 	await displayMenu();
 }

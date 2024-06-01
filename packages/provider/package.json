@@ -19,7 +19,9 @@
   "dependencies": {
     "@walletconnect/universal-provider": "*",
     "viem": "*",
-    "@uni-wc/chains": "workspace:*"
+    "@uni-wc/chains": "workspace:*",
+    "@solana/web3.js": "*",
+    "@jup-ag/api": "*"
   },
   "devDependencies": {
     "@ava/typescript": "^5.0.0",

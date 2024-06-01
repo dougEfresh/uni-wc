@@ -16,7 +16,7 @@ interface NamespaceConfig {
 export const NAMESPACE_TEST: NamespaceConfig = {
 	"solana": {
 	chains: [solanadev.id],
-		methods: ["solana_signMessage"],
+		methods: ["solana_signMessage", "solana_signTransaction"],
 		events: [],
 },
 	"eip155": {
@@ -35,7 +35,7 @@ export const NAMESPACE_TEST: NamespaceConfig = {
 export const NAMESPACE_MAIN: NamespaceConfig =  {
 	"solana": {
 		chains: [solana.id],
-		methods: ["solana_signMessage"],
+		methods: ["solana_signMessage", "solana_signTransaction"],
 		events: [],
 	},
 		"eip155": {

@@ -1,5 +1,5 @@
 import test from 'ava';
-import {UniversalProviderFactory} from "./provider.js";
+import {UniversalProviderFactory} from "./factory.js";
 import UniversalProvider from "@walletconnect/universal-provider";
 import {SessionTypes} from "@walletconnect/types";
 import * as console from "node:console";
