@@ -1,21 +1,28 @@
-import {Transaction, Connection, PublicKey, SystemProgram, Message, TransactionMessage} from '@solana/web3.js';
+import {
+	Transaction,
+	Connection,
+	PublicKey,
+	SystemProgram,
+	Message,
+	TransactionMessage,
+	TransactionInstruction
+} from '@solana/web3.js';
 import {Chain} from "@uni-wc/chains";
 import UniversalProvider from "@walletconnect/universal-provider";
 import SolanaProvider from "@walletconnect/universal-provider/dist/types/providers/solana";
 import bs58 from 'bs58';
 import {UniversalProviderFactory} from "../factory.js";
-import { createJupiterApiClient, DefaultApi as JupApi } from '@jup-ag/api';
+//import { createJupiterApiClient, DefaultApi as JupApi } from '@jup-ag/api';
 //import { SolendMarket } from '@solendprotocol/solend-sdk';
 
 
 export interface ISolanaSession {
 	signMessage(msg: string): Promise<string>;
-	signTransaction(t: Transaction): Promise<string>;
-	sendSol(to: string, lamports: number): Promise<string>;
+	signTransaction(txin: TransactionInstruction[]): Promise<Transaction>;
+	recentHash(): Promise<string>;
 	connection: Connection;
 	chain: Chain;
 	account: PublicKey
-	jup: JupApi,
 }
 
 interface MessageResponse {
@@ -30,7 +37,6 @@ export class SolanaSession implements ISolanaSession{
 	readonly chain: Chain;
 	readonly account: PublicKey;
 	readonly connection: Connection;
-	readonly jup: JupApi;
 
 	constructor(chain: Chain, provider: UniversalProvider) {
 		this.chain = chain;
@@ -41,7 +47,6 @@ export class SolanaSession implements ISolanaSession{
 		this.account = new PublicKey(walletConnectProvider.requestAccounts()[0]);
 		// TODO check url
 		this.connection = new Connection(chain.vchain.rpcUrls.default.http[0]);
-		this.jup = createJupiterApiClient({});
 	}
 
 	async signMessage(msg: string): Promise<string> {
@@ -57,37 +62,39 @@ export class SolanaSession implements ISolanaSession{
 		return Promise.resolve(sig.signature);
 	}
 
-	async sendSol(to: string, lampport: number) {
-		const hash = await this.connection.getLatestBlockhash("confirmed");
-		let ix = SystemProgram.transfer({
-			fromPubkey: this.account,
-			toPubkey: new PublicKey(to),
-			lamports: lampport,
-
-		});
-		const msg = new TransactionMessage({
-			instructions: [ix],
-			payerKey: this.account,
-			recentBlockhash: hash.blockhash,
-		})
-		var tx = Transaction.populate(msg.compileToLegacyMessage());
-		return this.signTransaction(tx);
-	}
-
-	async signTransaction(tx: Transaction): Promise<string> {
+	async signTransaction(txin: TransactionInstruction[]): Promise<Transaction> {
 		const provider = await UniversalProviderFactory.getProvider();
-
+		const hash = await this.recentHash();
+		const tx = new Transaction();
+		tx.recentBlockhash = hash;
+		tx.feePayer = this.account;
+		tx.add(...txin);
 		const serializedTransaction = tx.serialize({
-			requireAllSignatures: false
+			requireAllSignatures: false,
+			verifySignatures: false,
 		}).toString('base64');
-		const sig = await provider.request({
+		if (!tx.recentBlockhash) {
+			throw new Error("HASH HASH");
+		}
+		const sig: MessageResponse = await provider.request({
 			method: "solana_signTransaction",
 			params: {
 				transaction: serializedTransaction
 			}
 		}, this.chain.id)
-
-		return Promise.resolve(sig as string);
+		const decoded = bs58.decode(sig.signature);
+		const buf = Buffer.from(decoded);
+		if (buf.length != 64) {
+			throw new Error(`invalid buffer: ${sig.signature}  ${buf.length}` );
+		}
+		tx.addSignature(this.account, buf);
+		return Promise.resolve(tx);
 	}
+
+	async recentHash(): Promise<string> {
+		const h = await this.connection.getLatestBlockhash();
+		return Promise.resolve(h.blockhash);
+	}
+
 
 }

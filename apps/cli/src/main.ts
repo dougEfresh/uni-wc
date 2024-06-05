@@ -75,7 +75,7 @@ export async function main() {
 	await provider.connect({
 		namespaces: useTestnet ? NAMESPACE_TEST : NAMESPACE_MAIN,
 		pairingTopic: undefined,
-		skipPairing: true // optional to skip pairing ( later it can be resumed by invoking .pair())
+		skipPairing: true
 	})
 	if (!provider.session) {
 		console.log("new pairing");
@@ -86,5 +86,6 @@ export async function main() {
 	await provider.client.ping({
 		topic: provider.session!.topic
 	});
+	console.clear();
 	await displayMenu();
 }

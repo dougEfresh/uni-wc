@@ -7,7 +7,7 @@
   "types": "dist/types/index.d.ts",
   "typings": "dist/types/index.d.ts",
   "scripts": {
-    "build": "rm -rf dist && pnpm run build:esm+types",
+    "build": "pnpm run build:esm+types",
     "build:esm+types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
@@ -25,6 +25,7 @@
     "@solendprotocol/solend-sdk": "*",
     "@solana/spl-token": "*",
     "@uni-wc/chains": "workspace:*",
+    "@uni-wc/session-solana": "workspace:*",
     "@uni-wc/provider": "workspace:*",
     "@walletconnect/keyvaluestorage": "*",
     "@walletconnect/universal-provider": "*",

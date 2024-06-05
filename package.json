@@ -6,9 +6,10 @@
   "scripts": {
     "build:all": "pnpm -r run build",
     "cli": "pnpm build:pack && pnpm -F cli run cli",
-    "build:pack": "pnpm -r --filter './packages/*' run build",
+    "build:pack": "pnpm -r --filter '!webapp' run build",
     "dev:webapp": "pnpm -F webapp run dev",
-    "test:libs": "pnpm -r --filter ./packages run test"
+    "test:libs": "pnpm -r --filter ./packages run test",
+    "clean": "pnpm -r run clean"
   },
   "dependencies": {
     "@fireblocks/ts-sdk": "^2",
