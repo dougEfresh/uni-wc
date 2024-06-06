@@ -81,11 +81,23 @@ export async function main() {
 		console.log("new pairing");
 		await provider.pair(undefined);
 	}
-	console.log(JSON.stringify(provider.session));
 	await provider.enable();
-	await provider.client.ping({
-		topic: provider.session!.topic
-	});
+	console.log(JSON.stringify(provider.session));
+	try {
+		await withTimeout(provider.client.ping({
+			topic: provider.session!.topic
+		}), 5000);
+	} catch (e) {
+		console.error(e);
+		await provider.pair(undefined);
+	}
 	console.clear();
 	await displayMenu();
+}
+
+function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+	const timeout = new Promise<T>((_, reject) =>
+		setTimeout(() => reject(new Error('Operation timed out')), ms)
+	);
+	return Promise.race([promise, timeout]);
 }

@@ -17,8 +17,11 @@ export class TransactionSession implements ITransactionSession{
 			lamports: lamports,
 			toPubkey: to
 		})
-		const sig = await this.session.signTransaction([intx]);
-		return Promise.resolve("");
+		const tx = await this.session.signTransaction([intx]);
+		const sig = await this.session.connection.sendRawTransaction(tx.serialize(), {
+			maxRetries: 5,
+		});
+		return sig;
 	}
 
 

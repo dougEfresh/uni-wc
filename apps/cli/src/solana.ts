@@ -33,7 +33,8 @@ async function handle_transaction(txSession: TransactionSession) {
 		message: "To whom?"
 	});
 	const to: PublicKey = new PublicKey(whom);
-	await txSession.send(to, lamports);
+	const sig = await txSession.send(to, lamports);
+	console.log(sig);
 }
 
 export async function handle_solana(session: ISolanaSession) {
@@ -129,8 +130,66 @@ async function create_stake_account(staker: IStake) {
 		message: "How much you want to stake in SOL units?"
 	});
 	const lapmprts = parseFloat(answer) * LAMPORTS_PER_SOL;
-	await staker.stake(undefined, lapmprts);
-	console.log(lapmprts);
+	console.log("Check wallet to validate signature");
+	const sig = await staker.stake(lapmprts, undefined);
+	console.log(sig);
+}
+
+async function show_stake_accounts(staker: IStake) {
+	let choices = [];
+	for (let i = 0; i < staker.stakedAccounts.length; i++) {
+		const a = staker.stakedAccounts[i];
+		choices.push({
+			name: a.pubkey.toString().substring(0,9)  + ` (${a.account.lamports / LAMPORTS_PER_SOL} SOL)`,
+			value: i,
+			description: "",
+		})
+	}
+	const answer = await select({
+		choices: choices,
+		default: undefined,
+		loop: false,
+		message: "What you want",
+		pageSize: 5,
+	});
+	const account = staker.stakedAccounts[answer];
+	const action = await select({
+		choices: [
+			{
+				name: "Withdraw",
+				value: "withdraw"
+			},
+			{
+				name: "Deactivate",
+				value: "deactivate",
+			},
+			{
+				name: "Delegate",
+				value: "delegate",
+			}
+		],
+		default: "stake",
+		loop: false,
+		message: "What you desire?",
+		pageSize: 5,
+	})
+
+	switch (action) {
+		case 'withdraw':
+			console.log(await staker.withdraw(account.pubkey));
+			break;
+		case 'deactivate':
+			console.log(await staker.deactivate(account.pubkey));
+			break;
+		case 'delegate':
+			const voteKey = await input({
+				message: "Which validator?"
+			})
+			console.log( await staker.delegate(account.pubkey, new PublicKey(voteKey)));
+			break;
+		default:
+			break;
+	}
 }
 
 async function handle_stake(staker: IStake) {
@@ -152,7 +211,7 @@ async function handle_stake(staker: IStake) {
 		}
 	];
 
-	var answer = await select({
+	const answer = await select({
 		choices: choices,
 		default: undefined,
 		loop: false,
@@ -164,6 +223,7 @@ async function handle_stake(staker: IStake) {
 			await create_stake_account(staker);
 			break;
 		case "accounts":
+			await show_stake_accounts(staker);
 			break;
 		default:
 			return

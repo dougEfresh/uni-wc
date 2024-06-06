@@ -3,9 +3,8 @@ import {
 	Authorized,
 	Keypair, ParsedAccountData,
 	PublicKey,
-	sendAndConfirmTransaction,
+	Signer,
 	StakeProgram,
-	SystemProgram,
 	Transaction
 } from '@solana/web3.js';
 import {ISolanaSession} from '@uni-wc/provider';
@@ -23,7 +22,10 @@ export interface IStake {
 		pubkey: PublicKey;
 		account: AccountInfo<Buffer | ParsedAccountData>;
 	}>;
-	stake(stakeAccount: PublicKey | undefined, lamports: number): Promise<string>;
+	stake(lamports: number, signer: Signer | undefined): Promise<string>;
+	deactivate(stakeAccount: PublicKey): Promise<string>;
+	withdraw(stakeAccount: PublicKey): Promise<string>;
+	delegate(stakeAccount: PublicKey, voteKey: PublicKey): Promise<string>;
 	balance(): number;
 }
 
@@ -85,25 +87,66 @@ export class Stake implements IStake{
 		return total
 	}
 
-	async stake(stakeAccount: PublicKey | undefined, lamports: number): Promise<string> {
-		const sa = stakeAccount ? stakeAccount : Keypair.generate().publicKey;
-		const acct = await this.session.connection.getAccountInfo(sa);
-		if (acct) {
-			throw new Error(`count ${sa.toString()} already exists`);
+	async send(tx : Transaction, kp: Keypair | undefined): Promise<string> {
+		tx.feePayer = this.session.account;
+		const signed = await this.session.signTransaction(tx.instructions);
+		if (kp) {
+			signed.partialSign(kp);
 		}
+		const sig = await this.session.connection.sendRawTransaction(signed.serialize(), {
+			maxRetries: 5,
+		});
+
+		await this.setAccounts();
+		return sig;
+	}
+
+	async stake(lamports: number, signer: Signer | undefined): Promise<string> {
+		const sa = Keypair.generate();
 		const createStakeAccountTx = StakeProgram.createAccount({
 			authorized: new Authorized(this.session.account, this.session.account),
 			fromPubkey: this.session.account,
 			lamports: lamports,
-			stakePubkey: sa
+			stakePubkey: sa.publicKey,
 		});
-		createStakeAccountTx.feePayer = this.session.account;
-		const sig = await this.session.signTransaction(createStakeAccountTx.instructions);
-		//createStakeAccountTx.addSignature(this.session.account, Buffer.from(sig, 'base64'));
+		const sig = await this.send(createStakeAccountTx, sa);
 		await this.setAccounts();
-		return "";
+		return sig;
 	}
 
+	async delegate(stakeAccount: PublicKey, voteKey: PublicKey): Promise<string> {
+		const delegateTx = StakeProgram.delegate({
+			stakePubkey: stakeAccount,
+			authorizedPubkey: this.session.account,
+			votePubkey: voteKey
+		});
+		return this.send(delegateTx, undefined);
+	}
+
+
+	async deactivate(stakeAccount: PublicKey): Promise<string> {
+		
+		const tx = StakeProgram.deactivate({
+			stakePubkey: stakeAccount,
+			authorizedPubkey: this.session.account,
+		});
+		return  this.send(tx, undefined);
+	}
+
+	async withdraw(stakeAccount: PublicKey): Promise<string> {
+		const account = this.stakedAccounts.find((a) => a.pubkey == stakeAccount);
+		if (!account) {
+			throw new Error(`account not found ${stakeAccount.toString()}`);
+		}
+		const tx = StakeProgram.withdraw({
+				stakePubkey: stakeAccount,
+				authorizedPubkey: this.session.account,
+				toPubkey: this.session.account,
+				lamports: account.account.lamports,
+			}
+		);
+		return  this.send(tx, undefined);
+	}
 }
 
 
