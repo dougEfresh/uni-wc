@@ -14,14 +14,6 @@ importers:
       '@jup-ag/api':
         specifier: ^6.0.23
         version: 6.0.23
-      '@solana/spl-token':
-<<<<<<< Updated upstream
-        specifier: ^0.4.6
-        version: 0.4.6(@solana/web3.js@1.92.3(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(utf-8-validate@5.0.10)
-=======
-        specifier: ^0.4
-        version: 0.4.6(@solana/web3.js@1.91.8(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10))(bufferutil@4.0.8)(encoding@0.1.13)(fastestsmallesttextencoderdecoder@1.0.22)(utf-8-validate@5.0.10)
->>>>>>> Stashed changes
       '@solana/web3.js':
         specifier: ^1.92.3
         version: 1.92.3(bufferutil@4.0.8)(encoding@0.1.13)(utf-8-validate@5.0.10)
