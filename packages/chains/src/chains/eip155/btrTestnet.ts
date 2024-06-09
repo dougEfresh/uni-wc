@@ -1,5 +1,5 @@
 import { btrTestnet as vbtrTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const btrTestnet: Chain = {

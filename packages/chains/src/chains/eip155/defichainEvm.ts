@@ -1,5 +1,5 @@
 import { defichainEvm as vdefichainEvm } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const defichainEvm: Chain = {

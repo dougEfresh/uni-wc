@@ -1,5 +1,5 @@
 import { stratis as vstratis } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const stratis: Chain = {

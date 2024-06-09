@@ -1,5 +1,5 @@
 import { rollux as vrollux } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const rollux: Chain = {

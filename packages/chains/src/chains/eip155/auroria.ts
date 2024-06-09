@@ -1,5 +1,5 @@
 import { auroria as vauroria } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const auroria: Chain = {

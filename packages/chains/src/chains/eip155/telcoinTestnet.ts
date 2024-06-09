@@ -1,5 +1,5 @@
 import { telcoinTestnet as vtelcoinTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const telcoinTestnet: Chain = {

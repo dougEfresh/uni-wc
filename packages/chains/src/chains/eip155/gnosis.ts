@@ -1,5 +1,5 @@
 import { gnosis as vgnosis } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const gnosis: Chain = {

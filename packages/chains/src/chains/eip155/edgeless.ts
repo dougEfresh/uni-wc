@@ -1,5 +1,5 @@
 import { edgeless as vedgeless } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const edgeless: Chain = {

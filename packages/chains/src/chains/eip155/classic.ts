@@ -1,5 +1,5 @@
 import { classic as vclassic } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const classic: Chain = {

@@ -1,5 +1,5 @@
 import { palmTestnet as vpalmTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const palmTestnet: Chain = {

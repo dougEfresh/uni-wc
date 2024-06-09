@@ -1,5 +1,5 @@
 import { zora as vzora } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const zora: Chain = {

@@ -1,5 +1,5 @@
 import { scrollSepolia as vscrollSepolia } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const scrollSepolia: Chain = {

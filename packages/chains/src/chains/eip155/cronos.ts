@@ -1,5 +1,5 @@
 import { cronos as vcronos } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const cronos: Chain = {

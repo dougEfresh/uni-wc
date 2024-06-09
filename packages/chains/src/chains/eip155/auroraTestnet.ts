@@ -1,5 +1,5 @@
 import { auroraTestnet as vauroraTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const auroraTestnet: Chain = {

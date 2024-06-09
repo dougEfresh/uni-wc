@@ -1,5 +1,5 @@
 import { pulsechain as vpulsechain } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const pulsechain: Chain = {

@@ -1,5 +1,5 @@
 import { areonNetwork as vareonNetwork } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const areonNetwork: Chain = {

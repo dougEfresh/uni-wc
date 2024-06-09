@@ -1,5 +1,5 @@
 import { lukso as vlukso } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const lukso: Chain = {

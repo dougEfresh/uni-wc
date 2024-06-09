@@ -1,5 +1,5 @@
 import { zkSync as vzkSync } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const zkSync: Chain = {

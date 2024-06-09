@@ -1,5 +1,5 @@
 import { neonMainnet as vneonMainnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const neonMainnet: Chain = {

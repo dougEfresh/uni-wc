@@ -1,5 +1,5 @@
 import { optimismGoerli as voptimismGoerli } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const optimismGoerli: Chain = {

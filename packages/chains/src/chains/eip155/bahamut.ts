@@ -1,5 +1,5 @@
 import { bahamut as vbahamut } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const bahamut: Chain = {

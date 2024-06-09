@@ -1,5 +1,5 @@
 import { scroll as vscroll } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const scroll: Chain = {

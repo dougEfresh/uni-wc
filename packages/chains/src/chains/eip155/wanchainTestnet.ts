@@ -1,5 +1,5 @@
 import { wanchainTestnet as vwanchainTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const wanchainTestnet: Chain = {

@@ -1,5 +1,5 @@
 import { fraxtal as vfraxtal } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const fraxtal: Chain = {

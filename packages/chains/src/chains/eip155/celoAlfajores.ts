@@ -1,5 +1,5 @@
 import { celoAlfajores as vceloAlfajores } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const celoAlfajores: Chain = {

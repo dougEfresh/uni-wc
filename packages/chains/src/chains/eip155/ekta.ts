@@ -1,5 +1,5 @@
 import { ekta as vekta } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const ekta: Chain = {

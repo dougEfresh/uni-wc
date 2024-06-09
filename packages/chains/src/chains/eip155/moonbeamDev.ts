@@ -1,5 +1,5 @@
 import { moonbeamDev as vmoonbeamDev } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const moonbeamDev: Chain = {

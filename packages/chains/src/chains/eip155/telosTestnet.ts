@@ -1,5 +1,5 @@
 import { telosTestnet as vtelosTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const telosTestnet: Chain = {

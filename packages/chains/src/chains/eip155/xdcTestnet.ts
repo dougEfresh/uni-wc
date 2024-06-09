@@ -1,5 +1,5 @@
 import { xdcTestnet as vxdcTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const xdcTestnet: Chain = {

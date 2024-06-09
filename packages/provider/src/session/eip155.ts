@@ -2,6 +2,7 @@ import {Address, createPublicClient, createWalletClient, custom, http, PublicCli
 import { Chain } from '@uni-wc/chains';
 import UniversalProvider from "@walletconnect/universal-provider";
 import Eip155Provider from "@walletconnect/universal-provider/dist/types/providers/eip155";
+import {IContext} from "../factory";
 
 export interface IEipSession {
 	pc: PublicClient,
@@ -16,7 +17,7 @@ export class EipSession implements IEipSession {
 	readonly chain: Chain;
 	readonly account: Address;
 
-	constructor(c: Chain, provider: UniversalProvider) {
+	constructor(c: Chain, provider: UniversalProvider, context: IContext) {
 		const walletConnectProvider: Eip155Provider | undefined = provider.rpcProviders['eip155'] as Eip155Provider;
 
 		if (walletConnectProvider.requestAccounts().length == 0) {

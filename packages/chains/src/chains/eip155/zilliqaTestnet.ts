@@ -1,5 +1,5 @@
 import { zilliqaTestnet as vzilliqaTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const zilliqaTestnet: Chain = {

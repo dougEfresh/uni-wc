@@ -1,5 +1,5 @@
 import { sapphire as vsapphire } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const sapphire: Chain = {

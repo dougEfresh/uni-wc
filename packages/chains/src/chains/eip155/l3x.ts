@@ -1,5 +1,5 @@
 import { l3x as vl3x } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const l3x: Chain = {

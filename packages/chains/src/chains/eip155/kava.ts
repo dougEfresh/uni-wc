@@ -1,5 +1,5 @@
 import { kava as vkava } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const kava: Chain = {

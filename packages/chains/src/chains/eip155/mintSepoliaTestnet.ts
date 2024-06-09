@@ -1,5 +1,5 @@
 import { mintSepoliaTestnet as vmintSepoliaTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const mintSepoliaTestnet: Chain = {

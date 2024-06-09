@@ -1,5 +1,5 @@
 import { mantleSepoliaTestnet as vmantleSepoliaTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const mantleSepoliaTestnet: Chain = {

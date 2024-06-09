@@ -1,16 +1,16 @@
-import type {Chain} from "./chain.js";
-import {eth} from "./eip155/eth.js";
-import {sepolia} from "./eip155/sepolia.js";
-import {solana, solanadev} from "./solana.js";
-import {optimismSepolia} from "./eip155/optimismSepolia.js";
-import {base} from "./eip155/base.js";
-import {baseSepolia} from "./eip155/baseSepolia.js";
-import {celoAlfajores} from "./eip155/celoAlfajores.js";
-import {optimism} from "./eip155/optimism.js";
-import {polygon} from "./eip155/polygon.js";
-import {arbitrum} from "./eip155/arbitrum.js";
-import {celo} from "./eip155/celo.js";
-import {zkSync} from "./eip155/zkSync.js";
+import type {Chain} from "./chain";
+import {eth} from "./eip155/eth";
+import {sepolia} from "./eip155/sepolia";
+import {solana, solanadev} from "./solana";
+import {optimismSepolia} from "./eip155/optimismSepolia";
+import {base} from "./eip155/base";
+import {baseSepolia} from "./eip155/baseSepolia";
+import {celoAlfajores} from "./eip155/celoAlfajores";
+import {optimism} from "./eip155/optimism";
+import {polygon} from "./eip155/polygon";
+import {arbitrum} from "./eip155/arbitrum";
+import {celo} from "./eip155/celo";
+import {zkSync} from "./eip155/zkSync";
 
 export const ALL_CHAINS: Chain[] = [
 	eth,
@@ -27,6 +27,10 @@ export const ALL_CHAINS: Chain[] = [
 	celo,
 	zkSync
 ]
+
+export const CHAINS: Map<string, Chain> = new Map(
+	ALL_CHAINS.map((item) => [item.id, item])
+);
 
 export const TEST_CHAINS: Chain[] = ALL_CHAINS.filter((c) => c.vchain.testnet);
 

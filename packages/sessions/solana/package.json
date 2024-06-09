@@ -11,7 +11,8 @@
     "build:esm+types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "pnpm run build && ava"
+    "testava": "pnpm run build && ava",
+    "test":  "pnpm run build && jest"
   },
   "keywords": [],
   "author": "",
@@ -19,7 +20,8 @@
   "dependencies": {
     "@uni-wc/provider": "workspace:*",
     "@solana/web3.js": "*",
-    "@jup-ag/api": "*"
+    "@jup-ag/api": "*",
+    "@walletconnect/logger": "*"
   },
   "devDependencies": {
     "@ava/typescript": "^5",

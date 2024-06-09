@@ -1,5 +1,5 @@
 import { zkFair as vzkFair } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const zkFair: Chain = {

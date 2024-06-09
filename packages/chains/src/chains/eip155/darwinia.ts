@@ -1,5 +1,5 @@
 import { darwinia as vdarwinia } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const darwinia: Chain = {

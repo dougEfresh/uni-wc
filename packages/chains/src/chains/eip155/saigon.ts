@@ -1,5 +1,5 @@
 import { saigon as vsaigon } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const saigon: Chain = {

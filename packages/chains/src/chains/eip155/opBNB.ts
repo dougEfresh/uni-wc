@@ -1,5 +1,5 @@
 import { opBNB as vopBNB } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const opBNB: Chain = {

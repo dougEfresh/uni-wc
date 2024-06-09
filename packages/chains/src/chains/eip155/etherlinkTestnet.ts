@@ -1,5 +1,5 @@
 import { etherlinkTestnet as vetherlinkTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const etherlinkTestnet: Chain = {

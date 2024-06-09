@@ -1,5 +1,5 @@
 import { taraxaTestnet as vtaraxaTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const taraxaTestnet: Chain = {

@@ -1,5 +1,5 @@
 import { rolluxTestnet as vrolluxTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const rolluxTestnet: Chain = {

@@ -1,5 +1,5 @@
 import { songbird as vsongbird } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const songbird: Chain = {

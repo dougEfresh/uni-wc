@@ -1,5 +1,5 @@
 import { karura as vkarura } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const karura: Chain = {

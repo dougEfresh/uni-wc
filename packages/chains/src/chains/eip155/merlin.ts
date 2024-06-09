@@ -1,5 +1,5 @@
 import { merlin as vmerlin } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const merlin: Chain = {

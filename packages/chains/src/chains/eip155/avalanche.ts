@@ -1,5 +1,5 @@
 import { avalanche as vavalanche } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const avalanche: Chain = {

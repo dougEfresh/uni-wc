@@ -1,5 +1,5 @@
 import { crossbell as vcrossbell } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const crossbell: Chain = {

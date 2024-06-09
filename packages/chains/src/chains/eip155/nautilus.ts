@@ -1,5 +1,5 @@
 import { nautilus as vnautilus } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const nautilus: Chain = {

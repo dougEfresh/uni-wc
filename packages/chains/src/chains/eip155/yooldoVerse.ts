@@ -1,5 +1,5 @@
 import { yooldoVerse as vyooldoVerse } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const yooldoVerse: Chain = {

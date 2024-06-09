@@ -1,5 +1,5 @@
 import { zkSyncLocalNode as vzkSyncLocalNode } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const zkSyncLocalNode: Chain = {

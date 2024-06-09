@@ -1,5 +1,5 @@
 import { meter as vmeter } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const meter: Chain = {

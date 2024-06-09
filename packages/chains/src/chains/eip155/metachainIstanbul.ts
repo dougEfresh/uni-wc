@@ -1,5 +1,5 @@
 import { metachainIstanbul as vmetachainIstanbul } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const metachainIstanbul: Chain = {

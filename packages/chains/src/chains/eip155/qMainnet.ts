@@ -1,5 +1,5 @@
 import { qMainnet as vqMainnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const qMainnet: Chain = {

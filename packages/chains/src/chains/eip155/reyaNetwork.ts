@@ -1,5 +1,5 @@
 import { reyaNetwork as vreyaNetwork } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const reyaNetwork: Chain = {

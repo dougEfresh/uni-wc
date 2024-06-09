@@ -1,5 +1,5 @@
 import { bxn as vbxn } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const bxn: Chain = {

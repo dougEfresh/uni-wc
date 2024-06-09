@@ -1,5 +1,5 @@
 import { mev as vmev } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const mev: Chain = {

@@ -1,5 +1,5 @@
 import { flare as vflare } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const flare: Chain = {

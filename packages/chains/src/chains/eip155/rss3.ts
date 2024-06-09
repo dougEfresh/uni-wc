@@ -1,5 +1,5 @@
 import { rss3 as vrss3 } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const rss3: Chain = {

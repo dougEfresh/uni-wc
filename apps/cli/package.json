@@ -29,13 +29,15 @@
     "@uni-wc/provider": "workspace:*",
     "@walletconnect/keyvaluestorage": "*",
     "@walletconnect/universal-provider": "*",
+    "@walletconnect/sign-client": "^2",
     "bs58": "*",
     "commander": "*",
     "dotenv": "*",
     "qrcode-terminal": "*",
     "unstorage": "*",
     "viem": "*",
-    "xdg-basedir": "*"
+    "xdg-basedir": "*",
+    "pino-pretty": "*"
   },
   "devDependencies": {
     "@ava/typescript": "^5.0.0",

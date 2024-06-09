@@ -1,5 +1,5 @@
 import { polygonZkEvmTestnet as vpolygonZkEvmTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const polygonZkEvmTestnet: Chain = {

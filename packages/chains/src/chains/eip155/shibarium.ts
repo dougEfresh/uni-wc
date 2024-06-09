@@ -1,5 +1,5 @@
 import { shibarium as vshibarium } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const shibarium: Chain = {

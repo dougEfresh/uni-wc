@@ -1,6 +1,6 @@
 import {select, Separator} from '@inquirer/prompts';
-import UniversalProvider  from "@walletconnect/universal-provider";
-import {UniversalProviderFactory, ISessionFactory, IEipSession} from "@uni-wc/provider";
+import UniversalProvider from "@walletconnect/universal-provider";
+import {IEipSession, ISessionFactory, UniversalProviderFactory} from "@uni-wc/provider";
 import {chainById} from "@uni-wc/chains";
 import {Address} from "viem";
 import {handle_solana} from "./solana.js";
@@ -69,7 +69,11 @@ export async function displayMenu(): Promise<void> {
 
 	switch (answer) {
 		case 'ping':
-			await session.ping();
+			try {
+				await withTimeout(session.ping(), 5000);
+			} catch (e) {
+				console.error(e);
+			}
 			break;
 		case 'disconnect':
 			console.log('Disconnecting...');
@@ -172,4 +176,11 @@ async function handle_eip_chain(session: IEipSession) {
 			return
 		}
 	}
+}
+
+export function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
+	const timeout = new Promise<T>((_, reject) =>
+		setTimeout(() => reject(new Error('Operation timed out')), ms)
+	);
+	return Promise.race([promise, timeout]);
 }

@@ -1,5 +1,5 @@
 import { klaytnBaobab as vklaytnBaobab } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const klaytnBaobab: Chain = {

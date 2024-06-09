@@ -1,5 +1,5 @@
 import { dodochainTestnet as vdodochainTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const dodochainTestnet: Chain = {

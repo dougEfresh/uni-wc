@@ -1,4 +1,4 @@
-import {ISolanaSession} from "@uni-wc/provider";
+import {DryRunModeError, ISolanaSession} from "@uni-wc/provider";
 import {select, Separator, input, confirm} from "@inquirer/prompts";
 
 import {AccountLayout, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
@@ -24,6 +24,54 @@ async function tokens(session: ISolanaSession, programId: PublicKey) {
 	console.log("------------------------------------------------------------");
 }
 
+async function handle_fee_market(session: ISolanaSession) {
+	const prioritizationFeeObjects = await session.connection.getRecentPrioritizationFees();
+	if (prioritizationFeeObjects.length === 0) {
+		console.log('No prioritization fee data available.');
+		return;
+	}
+	// Extract slots and sort them
+	const slots = prioritizationFeeObjects.map(feeObject => feeObject.slot).sort((a, b) => a - b);
+
+	// Extract slots range
+	const slotsRangeStart = slots[0];
+	const slotsRangeEnd = slots[slots.length - 1];
+
+	// Calculate the average including zero fees
+	const averageFeeIncludingZeros = prioritizationFeeObjects.length > 0
+		? Math.floor(prioritizationFeeObjects.reduce((acc, feeObject) => acc + feeObject.prioritizationFee, 0) / prioritizationFeeObjects.length)
+		: 0;
+
+	// Filter out prioritization fees that are equal to 0 for other calculations
+	const nonZeroFees = prioritizationFeeObjects
+		.map(feeObject => feeObject.prioritizationFee)
+		.filter(fee => fee !== 0);
+
+	// Calculate the average of the non-zero fees
+	const averageFeeExcludingZeros = nonZeroFees.length > 0
+		? Math.floor(nonZeroFees.reduce((acc, fee) => acc + fee, 0) / nonZeroFees.length )
+		: 0;
+
+	// Calculate the median of the non-zero fees
+	const sortedFees = nonZeroFees.sort((a, b) => a - b);
+	let medianFee = 0;
+	if (sortedFees.length > 0) {
+		const midIndex = Math.floor(sortedFees.length / 2);
+		medianFee = sortedFees.length % 2 !== 0
+			? sortedFees[midIndex]
+			: Math.floor((sortedFees[midIndex - 1] + sortedFees[midIndex]) / 2);
+	}
+
+	console.log(`Slots examined for priority fees: ${prioritizationFeeObjects.length}`)
+	console.log(`Slots range examined from ${slotsRangeStart} to ${slotsRangeEnd}`);
+	console.log('====================================================================================')
+
+	// You can use averageFeeIncludingZeros, averageFeeExcludingZeros, and medianFee in your transactions script
+	console.log(` 💰 Average Prioritization Fee (including slots with zero fees): ${averageFeeIncludingZeros} micro-lamports.`);
+	console.log(` 💰 Average Prioritization Fee (excluding slots with zero fees): ${averageFeeExcludingZeros} micro-lamports.`);
+	console.log(` 💰 Median Prioritization Fee (excluding slots with zero fees): ${medianFee} micro-lamports.`);
+}
+
 async function handle_transaction(txSession: TransactionSession) {
 	const answer = await input({
 		message: "How much you want to stake in SOL units?"
@@ -41,6 +89,8 @@ export async function handle_solana(session: ISolanaSession) {
 	while (true) {
 		const answer = await select({
 			message: 'Choose an action',
+			loop: false,
+			pageSize: 10,
 			choices: [
 				{
 					name: "Info",
@@ -69,6 +119,10 @@ export async function handle_solana(session: ISolanaSession) {
 				},
 				new Separator(),
 				{
+					name: "Fees",
+					value: "fees",
+				},
+				{
 					name: "back",
 					value: "back",
 				}
@@ -86,7 +140,7 @@ export async function handle_solana(session: ISolanaSession) {
 					await tokens(session, TOKEN_2022_PROGRAM_ID);
 					const balance = await session.connection.getBalance(session.account, "confirmed") / LAMPORTS_PER_SOL;
 					console.log(`SOL balance: ${balance}`);
-					const stake = staker.balance();
+					const stake = staker.balance() / LAMPORTS_PER_SOL;
 					console.log(`Staked: ${stake}`);
 					console.log(`Address: ${session.account.toString()}`);
 					break;
@@ -99,6 +153,9 @@ export async function handle_solana(session: ISolanaSession) {
 					break;
 				case 'stake':
 					await handle_stake(staker);
+					break;
+				case 'fees':
+					await handle_fee_market(session);
 					break;
 				case 'message':
 					try {
@@ -117,10 +174,16 @@ export async function handle_solana(session: ISolanaSession) {
 					return
 			}
 		} catch(e) {
-			console.log(e);
+
+			if (e instanceof DryRunModeError) {
+				console.log(`recentBlockhash ${e.recentBlockhash}\nHeight${e.lastValidBlockHeight}\n${e.message}`);
+			} else {
+				console.log(e);
+			}
 			const answer = await confirm({
 				message: "Continue?"
 			});
+			console.clear();
 		}
 	}
 }

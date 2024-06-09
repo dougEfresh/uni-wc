@@ -1,5 +1,5 @@
 import { chiliz as vchiliz } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const chiliz: Chain = {

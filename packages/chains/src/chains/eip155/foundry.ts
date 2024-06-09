@@ -1,5 +1,5 @@
 import { foundry as vfoundry } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const foundry: Chain = {

@@ -1,5 +1,5 @@
 import { dreyerxMainnet as vdreyerxMainnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const dreyerxMainnet: Chain = {

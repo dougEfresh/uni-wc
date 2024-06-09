@@ -1,5 +1,5 @@
 import { ancient8 as vancient8 } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const ancient8: Chain = {

@@ -1,5 +1,5 @@
-import { solana, solanadev } from './solana.js'
-import {MAIN_CHAINS, TEST_CHAINS} from "./chains.js";
+import { solana, solanadev } from './solana'
+import {MAIN_CHAINS, TEST_CHAINS} from "./chains";
 
 
 interface BaseRequiredNamespace {

@@ -1,5 +1,5 @@
 import { otimDevnet as votimDevnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const otimDevnet: Chain = {

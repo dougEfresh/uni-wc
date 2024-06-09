@@ -8,7 +8,7 @@
   "typings": "dist/types/index.d.ts",
   "scripts": {
     "build": "pnpm run build:esm+types",
-    "build:esm+types": "tsc  --outDir ./dist/esm --declaration --declarationMap --declarationDir ./dist/types",
+    "build:esm+types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit"
   },
@@ -19,9 +19,17 @@
     "viem": "*"
   },
   "devDependencies": {
+    "@babel/preset-env": "*",
+    "babel-jest": "*",
+    "babel-plugin-add-import-extension": "*",
+    "jest": "*",
+    "ts-jest": "*",
+    "@jest/globals": "*",
+    "@types/jest": "*",
     "@types/node": "*",
+    "ts-node": "*",
+    "typescript": "*",
     "eslint": "^8",
-    "eslint-config-next": "14.2.3",
-    "typescript": "^5"
+    "eslint-config-next": "14.2.3"
   }
 }

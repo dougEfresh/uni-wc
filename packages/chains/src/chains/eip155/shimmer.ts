@@ -1,5 +1,5 @@
 import { shimmer as vshimmer } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const shimmer: Chain = {

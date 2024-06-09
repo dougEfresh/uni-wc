@@ -1,0 +1,47 @@
+{
+  "name": "@uni-wc/integration-tests",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "dist/esm/index.js",
+  "types": "dist/types/index.d.ts",
+  "typings": "dist/types/index.d.ts",
+  "scripts": {
+    "build": "pnpm run build:esm+types",
+    "build:esm+types": "tsc",
+    "clean": "rm -rf dist",
+    "typecheck": "tsc --noEmit",
+    "test": "only integration tests here",
+    "test:integration": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@solana/web3.js": "*",
+    "@uni-wc/chains": "workspace:*",
+    "@uni-wc/session-solana": "workspace:*",
+    "@uni-wc/provider": "workspace:*",
+    "@walletconnect/logger": "*",
+    "@walletconnect/universal-provider": "*",
+    "bs58": "*",
+    "viem": "*",
+    "dotenv": "*"
+  },
+  "devDependencies": {
+    "qrcode-terminal": "*",
+    "@babel/preset-env": "*",
+    "babel-jest": "*",
+    "babel-plugin-add-import-extension": "*",
+    "jest": "*",
+    "ts-jest": "*",
+    "jest-mock-extended": "*",
+    "@jest/globals": "*",
+    "@types/jest": "*",
+    "@types/node": "*",
+    "eslint": "^8",
+    "eslint-config-next": "*",
+    "ts-node": "*",
+    "typescript": "*"
+  }
+}

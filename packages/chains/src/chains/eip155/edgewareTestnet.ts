@@ -1,5 +1,5 @@
 import { edgewareTestnet as vedgewareTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const edgewareTestnet: Chain = {

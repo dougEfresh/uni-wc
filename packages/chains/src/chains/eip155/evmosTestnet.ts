@@ -1,5 +1,5 @@
 import { evmosTestnet as vevmosTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const evmosTestnet: Chain = {

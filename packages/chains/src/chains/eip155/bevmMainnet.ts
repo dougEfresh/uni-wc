@@ -1,5 +1,5 @@
 import { bevmMainnet as vbevmMainnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const bevmMainnet: Chain = {

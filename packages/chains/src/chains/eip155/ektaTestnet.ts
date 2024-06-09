@@ -1,5 +1,5 @@
 import { ektaTestnet as vektaTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const ektaTestnet: Chain = {

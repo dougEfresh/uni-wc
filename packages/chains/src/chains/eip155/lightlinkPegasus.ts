@@ -1,5 +1,5 @@
 import { lightlinkPegasus as vlightlinkPegasus } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const lightlinkPegasus: Chain = {

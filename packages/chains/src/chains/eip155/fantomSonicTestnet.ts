@@ -1,5 +1,5 @@
 import { fantomSonicTestnet as vfantomSonicTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const fantomSonicTestnet: Chain = {

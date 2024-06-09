@@ -11,43 +11,35 @@
     "build:esm+types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "pnpm run build && ava"
+    "test": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest --config ./jest.unit.config.ts",
+    "test:integration": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest --config ./jest.integration.config.ts"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@walletconnect/universal-provider": "*",
-    "viem": "*",
-    "@uni-wc/chains": "workspace:*",
     "@solana/web3.js": "*",
-    "bs58": "*"
+    "@uni-wc/chains": "workspace:*",
+    "@walletconnect/logger": "*",
+    "@walletconnect/universal-provider": "*",
+    "bs58": "*",
+    "viem": "*"
   },
   "devDependencies": {
-    "@ava/typescript": "^5.0.0",
-    "@types/node": "^20",
-    "ava": "^6.1.3",
+    "qrcode-terminal": "*",
+    "@babel/preset-env": "*",
+    "babel-jest": "*",
+    "babel-plugin-add-import-extension": "*",
+    "jest": "*",
+    "ts-jest": "*",
+    "jest-mock-extended": "*",
+    "@jest/globals": "*",
+    "@types/jest": "*",
+    "@types/node": "*",
     "eslint": "^8",
-    "eslint-config-next": "14.2.3",
-    "ts-node": "^10.9.2",
-    "typescript": "^5"
-  },
-  "ava": {
-    "files": [
-      "src/**/*.test.*"
-    ],
-    "verbose": false,
-    "typescript": {
-      "rewritePaths": {
-        "src/": "dist/esm/"
-      },
-      "compile": false
-    },
-    "require": [
-      "ts-node/esm/transpile-only"
-    ],
-    "nodeArguments": [
-      "--loader=ts-node/esm"
-    ]
+    "eslint-config-next": "*",
+    "ts-node": "*",
+    "dotenv": "*",
+    "typescript": "*"
   }
 }

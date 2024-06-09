@@ -1,9 +1,9 @@
 import { Chain } from '@uni-wc/chains';
-import {EipSession} from "./eip155.js";
+import {EipSession} from "./eip155";
 import UniversalProvider from "@walletconnect/universal-provider";
 import {chainById, solana, solanadev} from "@uni-wc/chains";
-import {ISolanaSession, SolanaSession} from "./solana.js";
-
+import {ISolanaSession, SolanaSession} from "./solana";
+import {IContext} from "../factory";
 
 export interface ISessionFactory {
 	topic: string,
@@ -23,8 +23,9 @@ export class SessionFactory implements ISessionFactory {
 	readonly topic: string;
 	private readonly solanaSession: ISolanaSession | undefined = undefined;
 	private provider: UniversalProvider;
+	private readonly context: IContext;
 
-	constructor(chains: Chain[], provider: UniversalProvider) {
+	constructor(chains: Chain[], provider: UniversalProvider, context: IContext) {
 		if (!provider.session) {
 			throw new Error("no session available");
 		}
@@ -33,14 +34,16 @@ export class SessionFactory implements ISessionFactory {
 		this.eipMap = {}
 		for (const chain of chains) {
 			if (chain.id.startsWith("eip155:")) {
-				this.eipMap[chain.id] = new EipSession(chain, provider)
+				this.eipMap[chain.id] = new EipSession(chain, provider, context)
 			}
 		}
 		const c = this.chains.find((c) => c.id == solana.id || c.id == solanadev.id);
 		if (c) {
-			this.solanaSession = new SolanaSession(c, provider);
+			//TODO check !!
+			this.solanaSession = new SolanaSession(c, provider.rpcProviders['solana'], provider.session.topic, context);
 		}
 		this.topic = provider.session.topic;
+		this.context = context;
 	}
 
 	solana(): ISolanaSession | undefined {
@@ -57,9 +60,7 @@ export class SessionFactory implements ISessionFactory {
 		});
 	}
 
-
-
-	public static create(provider: UniversalProvider) {
+	public static create(provider: UniversalProvider, context: IContext) {
 		const c: Chain[] = [];
 		for (const [key, value] of Object.entries(provider.session!.namespaces)) {
 			if (!value.chains)
@@ -72,7 +73,7 @@ export class SessionFactory implements ISessionFactory {
 				c.push(chain);
 			}
 		}
-		return new SessionFactory(c, provider);
+		return new SessionFactory(c, provider, context);
 	}
 }
 

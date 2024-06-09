@@ -1,5 +1,5 @@
 import { mode as vmode } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const mode: Chain = {

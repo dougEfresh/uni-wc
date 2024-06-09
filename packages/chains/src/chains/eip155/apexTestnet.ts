@@ -1,5 +1,5 @@
 import { apexTestnet as vapexTestnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const apexTestnet: Chain = {

@@ -1,5 +1,5 @@
 import { hederaPreviewnet as vhederaPreviewnet } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const hederaPreviewnet: Chain = {

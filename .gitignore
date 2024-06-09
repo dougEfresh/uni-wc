@@ -1,4 +1,5 @@
 .idea
+nohup.out
 dist/
 # dependencies
 node_modules

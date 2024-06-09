@@ -1,5 +1,5 @@
 import { taikoKatla as vtaikoKatla } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const taikoKatla: Chain = {

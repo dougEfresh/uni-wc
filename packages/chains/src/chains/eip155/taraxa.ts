@@ -1,5 +1,5 @@
 import { taraxa as vtaraxa } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const taraxa: Chain = {

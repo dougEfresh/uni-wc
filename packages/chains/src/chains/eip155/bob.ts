@@ -1,5 +1,5 @@
 import { bob as vbob } from "viem/chains";
-import {Chain} from "../chain.js";
+import {Chain} from "../chain";
 
 
 export const bob: Chain = {
