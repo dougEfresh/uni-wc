@@ -20,6 +20,7 @@
   "dependencies": {
     "@uni-wc/provider": "workspace:*",
     "@solana/web3.js": "*",
+    "@solana/spl-token": "*",
     "@jup-ag/api": "*",
     "@walletconnect/logger": "*"
   },
