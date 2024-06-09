@@ -11,8 +11,7 @@
     "build:esm+types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest --config ./jest.unit.config.ts",
-    "test:integration": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest --config ./jest.integration.config.ts"
+    "test": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest"
   },
   "keywords": [],
   "author": "",

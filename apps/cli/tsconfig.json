@@ -1,27 +1,16 @@
 {
-  "include": [
-    "src/**/*.ts"
-  ],
-    "exclude": [
-	"dist",
-	"node_modules",
+    "extends": "../../tsconfig.json",
+    "include": [
+        "./src/**/*.ts"
     ],
-  "compilerOptions": {
-    "target": "es2022",
-    "module": "esnext",
-    "rootDir": "./src",
-    "moduleResolution": "node",
-    "declaration": true,
-    "declarationMap": true,
-    "declarationDir": "./dist/types",
-    "baseUrl": "./",
-    "outDir": "./dist/esm",
-    "paths": {
-      "*": ["node_modules/*"]
-    },
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true
-  }
+    "exclude": [
+        "dist",
+        "node_modules",
+        "*.test.ts"
+    ],
+    "compilerOptions": {
+        "rootDir": "./src",
+        "declarationDir": "./dist/types",
+        "outDir": "./dist/esm",
+    }
 }
