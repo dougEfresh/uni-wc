@@ -1,4 +1,4 @@
-import { main } from './main.js';
+import { main } from './main';
 import {program} from "commander";
 import { CHAINS } from '@uni-wc/chains'
 

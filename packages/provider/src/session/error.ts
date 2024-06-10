@@ -1,4 +1,4 @@
-import {Transaction} from "@solana/web3.js";
+import {PublicKey, Transaction} from "@solana/web3.js";
 
 export class DryRunModeError extends Error {
 	public tx?: Transaction
@@ -16,3 +16,4 @@ export class DryRunModeError extends Error {
 		}
 	}
 }
+

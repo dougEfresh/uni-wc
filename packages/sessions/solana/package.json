@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "dist/esm/index.js",
+  "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "typings": "dist/types/index.d.ts",
   "scripts": {
     "build": "pnpm run build:esm+types",
-    "build:esm+types": "tsc",
+    "build:esm+types": "NODE_OPTIONS=--experimental-vm-modules babel src --out-dir dist --extensions .ts && tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "testava": "pnpm run build && ava",
@@ -25,6 +25,8 @@
     "@walletconnect/logger": "*"
   },
   "devDependencies": {
+    "@babel/core": "*",
+    "@babel/cli": "*",
     "@types/node": "*",
     "eslint": "*",
     "eslint-config-next": "*",

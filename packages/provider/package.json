@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "type": "module",
   "description": "",
-  "main": "dist/esm/index.js",
+  "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
   "typings": "dist/types/index.d.ts",
   "scripts": {
     "build": "pnpm run build:esm+types",
-    "build:esm+types": "tsc",
+    "build:esm+types": "NODE_OPTIONS=--experimental-vm-modules babel src --out-dir dist --extensions .ts && tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "test": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest"
@@ -27,6 +27,8 @@
   "devDependencies": {
     "qrcode-terminal": "*",
     "@babel/preset-env": "*",
+    "@babel/core": "*",
+    "@babel/cli": "*",
     "babel-jest": "*",
     "babel-plugin-add-import-extension": "*",
     "jest": "*",

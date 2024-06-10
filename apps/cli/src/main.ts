@@ -6,12 +6,13 @@ import {xdgData} from 'xdg-basedir';
 import qr from 'qrcode-terminal';
 import {program} from 'commander';
 import {Fireblocks, Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
-import {displayMenu, withTimeout} from "./menu.js";
+import {displayMenu, withTimeout} from "./menu";
 import pino from 'pino';
+
+
 const dbPath = `${xdgData}/uni-wc`;
 
-async function handle_session_proposal(fireblocksVaultId: number) {
-	return async (uri: string) => {
+async function handle_session_proposal(uri: string, fireblocksVaultId: number) {
 		qr.generate(uri, {small: true}, (qrcode: any) => {
 			console.info('Scan the QR code below with your wallet:');
 			console.log(qrcode);
@@ -31,8 +32,6 @@ async function handle_session_proposal(fireblocksVaultId: number) {
 				respondToConnectionRequest: {approve: true}
 			});
 		}
-
-	}
 }
 
 export async function main()
@@ -89,7 +88,7 @@ export async function main()
 		storageOptions: {
 			database: dbPath,
 		},
-		sessionProposalCallback: handle_session_proposal(fireblocksVaultId)
+		sessionProposalCallback: async (uri: string) => {await handle_session_proposal(uri, fireblocksVaultId)}
 	};
 
 	UniversalProviderFactory.configure(opts);

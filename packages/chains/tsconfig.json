@@ -11,6 +11,7 @@
     "compilerOptions": {
         "rootDir": "./src",
         "declarationDir": "./dist/types",
-        "outDir": "./dist/esm",
+        "outDir": "./dist",
+        "baseUrl": "./"
     }
 }

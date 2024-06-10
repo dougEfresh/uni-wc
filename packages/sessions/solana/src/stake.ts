@@ -1,19 +1,32 @@
 import {
 	AccountInfo,
-	Authorized, ComputeBudgetProgram,
+	Authorized,
 	Keypair,
 	ParsedAccountData,
-	PublicKey, SignatureResult,
+	PublicKey,
 	Signer,
 	StakeProgram,
-	Transaction
 } from "@solana/web3.js";
 import {Buffer} from "buffer";
-import {ISolanaSession} from "@uni-wc/provider";
-import {sign} from "viem/accounts";
+import {IContext, ISolanaSession} from "@uni-wc/provider";
+import {Logger} from "pino";
+
+
+
+export class AccountNotFound extends Error {
+	public pk: PublicKey
+	constructor(pk: PublicKey) {
+		super(`Account not found ${pk.toString()}`);
+		this.name = "AccountNotFound";
+		this.pk = pk;
+		if (Error.captureStackTrace) {
+			Error.captureStackTrace(this, AccountNotFound);
+		}
+	}
+}
 
 export interface IStake {
-	stakedAccounts: Array<{
+	stakedAccounts(): Array<{
 		pubkey: PublicKey;
 		account: AccountInfo<Buffer | ParsedAccountData>;
 	}>;
@@ -31,7 +44,9 @@ export interface IStake {
 
 export class Stake implements IStake {
 	session: ISolanaSession;
-	readonly stakedAccounts: Array<{
+	readonly logger: Logger;
+	readonly dryRun: boolean;
+	private _stakedAccounts: Array<{
 		pubkey: PublicKey;
 		account: AccountInfo<Buffer | ParsedAccountData>;
 	}>;
@@ -39,12 +54,14 @@ export class Stake implements IStake {
 	private constructor(session: ISolanaSession, stakedAccounts: Array<{
 		pubkey: PublicKey;
 		account: AccountInfo<Buffer | ParsedAccountData>;
-	}>) {
+	}>, ctx: IContext) {
 		this.session = session;
-		this.stakedAccounts = stakedAccounts;
+		this._stakedAccounts = stakedAccounts
+		this.dryRun = ctx.dryRun;
+		this.logger = ctx.logger.child({ context : "solana-staker"});
 	}
 
-	public static async init(session: ISolanaSession): Promise<Stake> {
+	public static async init(session: ISolanaSession, ctx: IContext): Promise<Stake> {
 		const accounts = await session.connection.getParsedProgramAccounts(
 			StakeProgram.programId,
 			{
@@ -58,46 +75,45 @@ export class Stake implements IStake {
 				],
 			},
 		);
-
-		return new Stake(session, accounts);
+		return new Stake(session, accounts, ctx);
 	}
 
-	async setAccounts() {
-		const accounts = await this.session.connection.getParsedProgramAccounts(
-			StakeProgram.programId,
-			{
-				filters: [
-					{
-						memcmp: {
-							offset: 12,
-							bytes: this.session.account.toBase58()
-						},
-					},
-				],
-			},
-		);
-
+	stakedAccounts(): Array<{ pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData>}> {
+		return this._stakedAccounts;
 	}
+
 
 	balance(): number {
 		let total = 0;
-		for (const account of this.stakedAccounts) {
+		for (const account of this.stakedAccounts()) {
 			total += account.account.lamports;
 		}
 		return total
 	}
 
-	async stake(lamports: number, signer: Signer | undefined): Promise<string> {
-		const sa = Keypair.generate();
+	async stake(lamports: number, acct: Signer | undefined): Promise<string> {
+		acct = acct ? acct : Keypair.generate();
 		const createStakeAccountTx = StakeProgram.createAccount({
 			authorized: new Authorized(this.session.account, this.session.account),
 			fromPubkey: this.session.account,
 			lamports: lamports,
-			stakePubkey: sa.publicKey,
+			stakePubkey: acct.publicKey,
 		});
-		const sig = await this.session.sendAndConfirm(createStakeAccountTx.instructions, sa);
-		await this.setAccounts();
-		return sig;
+		const sig = await this.session.sendAndConfirm(createStakeAccountTx.instructions, acct);
+		for  (let i = 0; i < 4; i++) {
+			this.logger.debug(`checking account ${acct.publicKey.toString()}`)
+			await new Promise(resolve => setTimeout(resolve, 3000));
+			try {
+				const a = await this.session.connection.getAccountInfo(acct.publicKey, "confirmed");
+				if (a) {
+					this._stakedAccounts.push({pubkey: acct.publicKey, account: a});
+					return sig;
+				}
+			} catch (e) {
+				this.logger.debug(e);
+			}
+		}
+		throw new AccountNotFound(acct.publicKey);
 	}
 
 	async delegate(stakeAccount: PublicKey, voteKey: PublicKey): Promise<string> {
@@ -120,7 +136,7 @@ export class Stake implements IStake {
 	}
 
 	async withdraw(stakeAccount: PublicKey): Promise<string> {
-		const account = this.stakedAccounts.find((a) => a.pubkey == stakeAccount);
+		const account = this.stakedAccounts().find((a) => a.pubkey == stakeAccount);
 		if (!account) {
 			throw new Error(`account not found ${stakeAccount.toString()}`);
 		}
@@ -131,6 +147,8 @@ export class Stake implements IStake {
 				lamports: account.account.lamports,
 			}
 		);
-		return this.session.sendAndConfirm(tx.instructions, undefined);
+		const sig = this.session.sendAndConfirm(tx.instructions, undefined);
+		this._stakedAccounts = this._stakedAccounts.filter((a) => a.pubkey.toString() != account.pubkey.toString());
+		return sig;
 	}
 }

@@ -2,7 +2,7 @@ import {
 	Transaction,
 	Connection,
 	PublicKey,
-	TransactionInstruction, SignatureResult, Keypair,ComputeBudgetProgram
+	TransactionInstruction, SignatureResult, Keypair, ComputeBudgetProgram, Signer
 } from '@solana/web3.js';
 import {Chain} from "@uni-wc/chains";
 import bs58 from 'bs58';
@@ -14,7 +14,7 @@ import {IProvider} from "@walletconnect/universal-provider";
 export interface ISolanaSession {
 	signMessage(msg: string): Promise<string>;
 	signTransaction(txin: TransactionInstruction[]): Promise<Transaction>;
-	sendAndConfirm(tx: TransactionInstruction[], kp: Keypair | undefined): Promise<string>;
+	sendAndConfirm(tx: TransactionInstruction[], kp: Signer | undefined): Promise<string>;
 	connection: Connection;
 	chain: Chain;
 	account: PublicKey
@@ -48,7 +48,7 @@ export class SolanaSession implements ISolanaSession{
 			// TODO check url
 			this.connection = new Connection(chain.vchain.rpcUrls.default.http[0]);
 		}
-		this.maxFeeMicroLamports = 550;
+		this.maxFeeMicroLamports = 10000;
 		this.context = context;
 		this.logger = context.logger.child({context: "session-solana"});
 		this.session = session;
@@ -140,13 +140,15 @@ export class SolanaSession implements ISolanaSession{
 		this.logger.debug(`Average Prioritization Fee (excluding slots with zero fees): ${averageFeeExcludingZeros} micro-lamports.`);
 		this.logger.debug(`Median Prioritization Fee (excluding slots with zero fees): ${medianFee} micro-lamports.`);
 
-		if (averageFeeExcludingZeros < medianFee) {
-			return Math.min(averageFeeExcludingZeros, this.maxFeeMicroLamports)
+		let fee = Math.min(medianFee, this.maxFeeMicroLamports);
+		if (averageFeeExcludingZeros > medianFee) {
+			fee = Math.min(averageFeeExcludingZeros, this.maxFeeMicroLamports)
 		}
-		return Math.min(medianFee, this.maxFeeMicroLamports);
+		this.logger.info(`returning fee ${fee}`);
+		return fee;
 	}
 
-	async sendAndConfirm(tx: TransactionInstruction[], kp: Keypair | undefined): Promise<string> {
+	async sendAndConfirm(tx: TransactionInstruction[], kp: Signer | undefined): Promise<string> {
 		const fee = ComputeBudgetProgram.setComputeUnitPrice({
 			microLamports: await this.computeFee()
 		});

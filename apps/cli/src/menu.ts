@@ -3,7 +3,7 @@ import UniversalProvider from "@walletconnect/universal-provider";
 import {IEipSession, ISessionFactory, UniversalProviderFactory} from "@uni-wc/provider";
 import {chainById} from "@uni-wc/chains";
 import {Address} from "viem";
-import {handle_solana} from "./solana.js";
+import {handle_solana} from "./solana";
 
 
 export async function displayMenu(): Promise<void> {

@@ -1,7 +1,6 @@
 import {Address, createPublicClient, createWalletClient, custom, http, PublicClient, WalletClient} from 'viem';
 import { Chain } from '@uni-wc/chains';
 import UniversalProvider from "@walletconnect/universal-provider";
-import Eip155Provider from "@walletconnect/universal-provider/dist/types/providers/eip155";
 import {IContext} from "../factory";
 
 export interface IEipSession {
@@ -9,6 +8,10 @@ export interface IEipSession {
 	wc: WalletClient,
 	chain: Chain,
 	account: Address,
+}
+
+interface Eip155Provider {
+	requestAccounts(): string[]
 }
 
 export class EipSession implements IEipSession {

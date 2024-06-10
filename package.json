@@ -6,15 +6,15 @@
   "scripts": {
     "build:all": "pnpm -r run build",
     "cli": "pnpm build:pack && pnpm -F cli run cli",
-    "build:pack": "pnpm -r --filter './packages' run build",
+    "build:pack": "pnpm -r --filter './packages/**' run build",
     "dev:webapp": "pnpm -F webapp run dev",
     "test:libs": "pnpm -r --filter ./packages run test",
+    "test:integration": "pnpm build:pack && pnpm -r --filter ./packages/integration/ run test:integration",
     "clean": "pnpm -r run clean"
   },
   "dependencies": {
     "@fireblocks/ts-sdk": "^2.1.0",
     "@jup-ag/api": "^6.0.23",
-    "@solana/spl-token": "^0.4.6",
     "@solana/web3.js": "^1.92.3",
     "@solendprotocol/solend-sdk": "^0.8.8",
     "@walletconnect/core": "^2.13.1",
@@ -36,7 +36,7 @@
     "unstorage": "^1.10.2",
     "viem": "^2.13.7",
     "wagmi": "^2.9.10",
-    "xdg-basedir": "^5.1.0"
+    "xdg-basedir": "^5.1.0",
     "@solana/spl-token": "^0.4"
   },
   "devDependencies": {
@@ -56,6 +56,8 @@
     "tailwindcss": "^3.4.4",
     "ts-jest": "^29.1.4",
     "ts-node": "^10.9.2",
+    "@babel/core": "^7",
+    "@babel/cli": "^7",
     "typescript": "^5.4.5"
   },
   "keywords": [],

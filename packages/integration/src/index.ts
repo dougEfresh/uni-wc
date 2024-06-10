@@ -1,7 +1,7 @@
 import pino from "pino";
 import {Fireblocks, Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
 import {NAMESPACE_TEST, sepolia} from "@uni-wc/chains";
-import {UniversalProviderFactory, ISolanaSession, IEipSession} from "@uni-wc/provider";
+import {UniversalProviderFactory, ISolanaSession, IEipSession, IContext} from "@uni-wc/provider";
 import UniversalProvider from "@walletconnect/universal-provider";
 
 
@@ -9,6 +9,7 @@ export interface TestSessions {
 	provider: UniversalProvider;
 	solSession: ISolanaSession;
 	sepoliaSession: IEipSession;
+	ctx: IContext;
 }
 
 export async function test_init(): Promise<TestSessions> {
@@ -97,5 +98,9 @@ export async function test_init(): Promise<TestSessions> {
 		provider,
 		solSession,
 		sepoliaSession,
+		ctx: {
+			dryRun: false,
+			logger: logger
+		}
 	}
 }

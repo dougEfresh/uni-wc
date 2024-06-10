@@ -1,4 +1,4 @@
-import {DryRunModeError, ISolanaSession} from "@uni-wc/provider";
+import {DryRunModeError, ISolanaSession, UniversalProviderFactory} from "@uni-wc/provider";
 import {select, Separator, input, confirm} from "@inquirer/prompts";
 
 import {AccountLayout, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
@@ -129,7 +129,7 @@ export async function handle_solana(session: ISolanaSession) {
 			]
 		});
 		try {
-			const staker = await Stake.init(session);
+			const staker = await Stake.init(session, UniversalProviderFactory.context);
 			const txSession = new TransactionSession(session);
 			switch (answer) {
 				case 'info':
@@ -176,7 +176,7 @@ export async function handle_solana(session: ISolanaSession) {
 		} catch(e) {
 
 			if (e instanceof DryRunModeError) {
-				console.log(`recentBlockhash ${e.recentBlockhash}\nHeight${e.lastValidBlockHeight}\n${e.message}`);
+				console.log(`${e.message}`);
 			} else {
 				console.log(e);
 			}
@@ -201,7 +201,7 @@ async function create_stake_account(staker: IStake) {
 async function show_stake_accounts(staker: IStake) {
 	let choices = [];
 	for (let i = 0; i < staker.stakedAccounts.length; i++) {
-		const a = staker.stakedAccounts[i];
+		const a = staker.stakedAccounts()[1];
 		choices.push({
 			name: a.pubkey.toString().substring(0,9)  + ` (${a.account.lamports / LAMPORTS_PER_SOL} SOL)`,
 			value: i,
@@ -215,7 +215,7 @@ async function show_stake_accounts(staker: IStake) {
 		message: "What you want",
 		pageSize: 5,
 	});
-	const account = staker.stakedAccounts[answer];
+	const account = staker.stakedAccounts()[answer];
 	const action = await select({
 		choices: [
 			{

@@ -22,7 +22,7 @@ export class UniversalProviderFactory {
 	protected static provider: Provider;
 	protected static session: ISessionFactory;
 	protected static providerOpts: ProviderOpts;
-	protected static context: IContext;
+	public static context: IContext;
 
 	public static configure(providerOpts: ProviderOpts) {
 		UniversalProviderFactory.providerOpts = providerOpts;
