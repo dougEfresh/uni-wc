@@ -12,5 +12,7 @@
         "rootDir": "./src",
         "declarationDir": "./dist/types",
         "outDir": "./dist/esm",
+        "module": "esnext",
+	"allowJs": true
     }
 }

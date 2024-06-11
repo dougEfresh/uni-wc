@@ -1,5 +1,6 @@
 import { solana, solanadev } from './solana'
 import {MAIN_CHAINS, TEST_CHAINS} from "./chains";
+import {cosmos} from "./cosmos";
 
 
 interface BaseRequiredNamespace {
@@ -14,6 +15,11 @@ interface NamespaceConfig {
 
 
 export const NAMESPACE_TEST: NamespaceConfig = {
+	"cosmos": {
+		chains:[cosmos.id],
+		methods: ["cosmos_signDirect"],
+		events:[],
+	},
 	"solana": {
 	chains: [solanadev.id],
 		methods: ["solana_signMessage", "solana_signTransaction"],

@@ -11,6 +11,7 @@ import {polygon} from "./eip155/polygon";
 import {arbitrum} from "./eip155/arbitrum";
 import {celo} from "./eip155/celo";
 import {zkSync} from "./eip155/zkSync";
+import {cosmos} from "./cosmos";
 
 export const ALL_CHAINS: Chain[] = [
 	eth,
@@ -33,6 +34,5 @@ export const CHAINS: Map<string, Chain> = new Map(
 );
 
 export const TEST_CHAINS: Chain[] = ALL_CHAINS.filter((c) => c.vchain.testnet);
-
 export const MAIN_CHAINS: Chain[] = ALL_CHAINS.filter((c) => !c.vchain.testnet);
 

@@ -1,6 +1,7 @@
 import {defineChain} from "viem";
+import {type Chain} from "./chain";
 
-const cosmos = defineChain({
+const vcosmos = defineChain({
 	id: -1,
 	name: 'Cosmose',
 	network: 'cosmos',
@@ -31,3 +32,9 @@ const cosmos = defineChain({
 	},
 	testnet: false,
 });
+
+export const cosmos: Chain = {
+	id: "cosmos:cosmoshub-4",
+	namespace: "cosmos",
+	vchain: vcosmos
+}

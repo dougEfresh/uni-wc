@@ -75,6 +75,7 @@ export class Stake implements IStake {
 				],
 			},
 		);
+		ctx.logger.debug(`Got ${accounts.length} staked accounts`);
 		return new Stake(session, accounts, ctx);
 	}
 

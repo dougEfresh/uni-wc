@@ -200,10 +200,11 @@ async function create_stake_account(staker: IStake) {
 
 async function show_stake_accounts(staker: IStake) {
 	let choices = [];
-	for (let i = 0; i < staker.stakedAccounts.length; i++) {
-		const a = staker.stakedAccounts()[1];
+	const accounts = staker.stakedAccounts();
+	for (let i = 0; i < accounts.length; i++) {
+		const a = accounts[i];
 		choices.push({
-			name: a.pubkey.toString().substring(0,9)  + ` (${a.account.lamports / LAMPORTS_PER_SOL} SOL)`,
+			name: a.pubkey.toString()  + ` (${a.account.lamports / LAMPORTS_PER_SOL} SOL)`,
 			value: i,
 			description: "",
 		})
@@ -211,9 +212,9 @@ async function show_stake_accounts(staker: IStake) {
 	const answer = await select({
 		choices: choices,
 		default: undefined,
-		loop: false,
+		loop: true,
 		message: "What you want",
-		pageSize: 5,
+		pageSize: 10,
 	});
 	const account = staker.stakedAccounts()[answer];
 	const action = await select({
@@ -229,6 +230,11 @@ async function show_stake_accounts(staker: IStake) {
 			{
 				name: "Delegate",
 				value: "delegate",
+			},
+			new Separator(),
+			{
+				name: "Back",
+				value: "back",
 			}
 		],
 		default: "stake",
@@ -263,7 +269,7 @@ async function handle_stake(staker: IStake) {
 			description: ""
 		},
 		{
-			name: "See Accounts (" + staker.stakedAccounts.length + ")",
+			name: "See Accounts (" + staker.stakedAccounts().length + ")",
 			value: "accounts",
 			description: ""
 		},

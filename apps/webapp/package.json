@@ -28,6 +28,8 @@
     "@walletconnect/types": "*",
     "@walletconnect/utils": "*",
     "@web3modal/wagmi": "^4.2.2",
+    "@cosmjs/stargate": "^0.32",
+    "@cosmjs/proto-signing": "^0.32",
     "next": "*",
     "react": "*",
     "react-dom": "^18",

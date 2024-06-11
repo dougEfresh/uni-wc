@@ -107,32 +107,6 @@ export async function main()
 		logger.info("subscription_created", JSON.stringify(obj));
 	});
 
-	/*
-	provider.on('display_uri', async (uri: string)  => {
-		qr.generate(uri, { small: true }, (qrcode: any) => {
-			console.info('Scan the QR code below with your wallet:');
-			console.log(qrcode);
-		});
-		console.log('display_uri', uri);
-		if (fireblocksVaultId >= 0) {
-			logger.info("Calling fireblocks");
-			const fb = new Fireblocks();
-			const web3 = await fb.web3Connections.create(<Web3ConnectionsApiCreateRequest>{
-				createConnectionRequest: {
-					vaultAccountId: 0,
-					feeLevel: "MEDIUM",
-					uri: uri,
-				}
-			});
-			logger.info("approving WalletConnect session");
-			await fb.web3Connections.submit({
-				id: web3.data.id,
-				respondToConnectionRequest:  { approve: true }
-			});
-		}
-	});
-	 */
-
 	await provider.connect({
 		namespaces: useTestnet ? NAMESPACE_TEST : NAMESPACE_MAIN,
 		pairingTopic: undefined,

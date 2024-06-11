@@ -67,7 +67,7 @@ describe('solana-sign', () => {
 describe('solana-stake', () => {
 	test('create', async () => {
 		const rando = new Keypair();
-		const sig  = await solStaker.stake(0.7 * LAMPORTS_PER_SOL, rando );
+		const sig  = await solStaker.stake(1.1 * LAMPORTS_PER_SOL, rando );
 		expect(sig.length).toBeGreaterThanOrEqual(40);
 		const acct = solStaker.stakedAccounts().find((a) => a.pubkey.toString() === rando.publicKey.toString());
 		expect(acct).toBeDefined();
@@ -76,11 +76,15 @@ describe('solana-stake', () => {
 
 	test('withdrawal', async () => {
 		if (solStaker.stakedAccounts().length == 0) {
-			console.warn("no accounts to withdrawal from")
+			console.warn("no accounts to withdrawal from");
 			return;
 		}
 		let size = solStaker.stakedAccounts().length - 1;
-		const removed = solStaker.stakedAccounts()[0];
+		const removed = solStaker.stakedAccounts().find((a) => a.account.lamports > LAMPORTS_PER_SOL);
+		if (!removed) {
+			console.warn("no accounts above 1 SOL to remove");
+			return;
+		}
 		await solStaker.withdraw(removed.pubkey);
 		expect(solStaker.stakedAccounts().length).toEqual(size);
 		const exists = solStaker.stakedAccounts().find((a)  => a.pubkey.toString() === removed.pubkey.toString());

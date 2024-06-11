@@ -2,11 +2,10 @@
   "name": "@uni-wc/cli",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
-  "typings": "dist/types/index.d.ts",
   "scripts": {
-    "build": "NODE_OPTIONS=--experimental-vm-modules babel src --out-dir dist --extensions .ts",
+    "build": "export NODE_OPTIONS=--experimental-vm-modules;  babel src --out-dir dist --extensions .ts && tsc",
     "build:esm+types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
