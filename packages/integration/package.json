@@ -1,7 +1,6 @@
 {
   "name": "@uni-wc/integration-tests",
   "version": "1.0.0",
-  "type": "module",
   "description": "",
   "main": "dist/index.js",
   "types": "dist/types/index.d.ts",
@@ -12,7 +11,7 @@
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "test": "only integration tests here",
-    "test:integration": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest"
+    "test:integration": "pnpm run build && NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "keywords": [],
   "author": "",

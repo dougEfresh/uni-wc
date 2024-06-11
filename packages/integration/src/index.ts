@@ -1,7 +1,7 @@
 import pino from "pino";
-import {Fireblocks, Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
+import {Fireblocks, type Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
 import {NAMESPACE_TEST, sepolia} from "@uni-wc/chains";
-import {UniversalProviderFactory, ISolanaSession, IEipSession, IContext} from "@uni-wc/provider";
+import {UniversalProviderFactory, type ISolanaSession, type IEipSession, type IContext} from "@uni-wc/provider";
 import UniversalProvider from "@walletconnect/universal-provider";
 
 
