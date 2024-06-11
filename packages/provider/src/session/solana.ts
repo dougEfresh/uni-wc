@@ -2,14 +2,14 @@ import {
 	Transaction,
 	Connection,
 	PublicKey,
-	TransactionInstruction, SignatureResult, Keypair, ComputeBudgetProgram, Signer
+	TransactionInstruction, type SignatureResult, ComputeBudgetProgram, type Signer
 } from '@solana/web3.js';
-import {Chain} from "@uni-wc/chains";
+import {type Chain} from "@uni-wc/chains";
 import bs58 from 'bs58';
-import {IContext} from "../factory";
-import {Logger} from "@walletconnect/logger";
+import {type IContext} from "../factory";
+import { type Logger } from "@walletconnect/logger";
 import {DryRunModeError} from "./error";
-import {IProvider} from "@walletconnect/universal-provider";
+import {type IProvider} from "@walletconnect/universal-provider";
 
 export interface ISolanaSession {
 	signMessage(msg: string): Promise<string>;

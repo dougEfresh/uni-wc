@@ -1,5 +1,5 @@
 import { dfk as vdfk } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const dfk: Chain = {

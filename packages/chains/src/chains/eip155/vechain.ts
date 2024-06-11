@@ -1,5 +1,5 @@
 import { vechain as vvechain } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const vechain: Chain = {

@@ -1,7 +1,7 @@
-import {Address, createPublicClient, createWalletClient, custom, http, PublicClient, WalletClient} from 'viem';
-import { Chain } from '@uni-wc/chains';
+import {type Address, createPublicClient, createWalletClient, custom, http, type PublicClient, type WalletClient} from 'viem';
+import { type Chain } from '@uni-wc/chains';
 import UniversalProvider from "@walletconnect/universal-provider";
-import {IContext} from "../factory";
+import {type IContext} from "../factory";
 
 export interface IEipSession {
 	pc: PublicClient,

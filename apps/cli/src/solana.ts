@@ -1,9 +1,9 @@
-import {DryRunModeError, ISolanaSession, UniversalProviderFactory} from "@uni-wc/provider";
+import {DryRunModeError, type ISolanaSession, UniversalProviderFactory} from "@uni-wc/provider";
 import {select, Separator, input, confirm} from "@inquirer/prompts";
 
 import {AccountLayout, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
-import {LAMPORTS_PER_SOL, PublicKey, StakeProgram} from "@solana/web3.js"
-import {IStake, Stake, TransactionSession} from "@uni-wc/session-solana";
+import {LAMPORTS_PER_SOL, PublicKey} from "@solana/web3.js"
+import {type IStake, Stake, TransactionSession} from "@uni-wc/session-solana";
 
 async function tokens(session: ISolanaSession, programId: PublicKey) {
 	const connection = session.connection;

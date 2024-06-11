@@ -1,5 +1,5 @@
 import { syscoin as vsyscoin } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const syscoin: Chain = {

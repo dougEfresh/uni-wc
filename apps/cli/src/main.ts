@@ -1,11 +1,11 @@
 import {UniversalProviderFactory} from "@uni-wc/provider";
 import {NAMESPACE_MAIN, NAMESPACE_TEST} from "@uni-wc/chains";
-import UniversalProvider, {UniversalProviderOpts} from "@walletconnect/universal-provider";
-import {SessionTypes} from "@walletconnect/types";
+import UniversalProvider from "@walletconnect/universal-provider";
+import {type SessionTypes} from "@walletconnect/types";
 import {xdgData} from 'xdg-basedir';
 import qr from 'qrcode-terminal';
 import {program} from 'commander';
-import {Fireblocks, Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
+import {Fireblocks, type Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
 import {displayMenu, withTimeout} from "./menu";
 import pino from 'pino';
 

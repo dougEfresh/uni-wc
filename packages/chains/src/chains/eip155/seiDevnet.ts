@@ -1,5 +1,5 @@
 import { seiDevnet as vseiDevnet } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const seiDevnet: Chain = {

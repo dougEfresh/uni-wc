@@ -1,5 +1,5 @@
 import { klaytn as vklaytn } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const klaytn: Chain = {

@@ -1,5 +1,5 @@
 import { acala as vacala } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const acala: Chain = {

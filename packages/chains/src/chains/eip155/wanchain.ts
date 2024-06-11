@@ -1,5 +1,5 @@
 import { wanchain as vwanchain } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const wanchain: Chain = {

@@ -1,5 +1,5 @@
 import { fuseSparknet as vfuseSparknet } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const fuseSparknet: Chain = {

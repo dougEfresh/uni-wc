@@ -1,5 +1,5 @@
 import { blast as vblast } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const blast: Chain = {

@@ -1,5 +1,5 @@
 import { playfiAlbireo as vplayfiAlbireo } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const playfiAlbireo: Chain = {

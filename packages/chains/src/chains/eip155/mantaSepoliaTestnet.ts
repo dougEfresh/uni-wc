@@ -1,5 +1,5 @@
 import { mantaSepoliaTestnet as vmantaSepoliaTestnet } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const mantaSepoliaTestnet: Chain = {

@@ -1,5 +1,5 @@
 import { kcc as vkcc } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const kcc: Chain = {

@@ -1,5 +1,5 @@
 import { thaiChain as vthaiChain } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const thaiChain: Chain = {

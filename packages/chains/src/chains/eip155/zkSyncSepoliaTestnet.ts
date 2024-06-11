@@ -1,5 +1,5 @@
 import { zkSyncSepoliaTestnet as vzkSyncSepoliaTestnet } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const zkSyncSepoliaTestnet: Chain = {

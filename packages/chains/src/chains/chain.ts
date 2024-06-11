@@ -1,4 +1,4 @@
-import {Chain as Vchain, defineChain} from 'viem'
+import {type Chain as Vchain, defineChain} from 'viem'
 
 export type Chain = {
 	id: string,

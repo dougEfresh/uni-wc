@@ -1,5 +1,5 @@
 import { zkSyncInMemoryNode as vzkSyncInMemoryNode } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const zkSyncInMemoryNode: Chain = {

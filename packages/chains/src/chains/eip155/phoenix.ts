@@ -1,5 +1,5 @@
 import { phoenix as vphoenix } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const phoenix: Chain = {

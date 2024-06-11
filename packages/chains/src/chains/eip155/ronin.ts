@@ -1,5 +1,5 @@
 import { ronin as vronin } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const ronin: Chain = {

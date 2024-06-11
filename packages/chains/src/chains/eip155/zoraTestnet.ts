@@ -1,5 +1,5 @@
 import { zoraTestnet as vzoraTestnet } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const zoraTestnet: Chain = {

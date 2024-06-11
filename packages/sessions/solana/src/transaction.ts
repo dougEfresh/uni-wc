@@ -1,5 +1,5 @@
 import {PublicKey, SystemProgram, Transaction} from "@solana/web3.js";
-import {ISolanaSession} from "@uni-wc/provider";
+import {type ISolanaSession} from "@uni-wc/provider";
 
 export interface ITransactionSession {
 	send(to: PublicKey, lamports: number): Promise<string>;

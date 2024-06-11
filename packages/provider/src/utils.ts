@@ -3,8 +3,8 @@ import {Fireblocks, Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
 import {NAMESPACE_TEST, sepolia} from "@uni-wc/chains";
 import {UniversalProviderFactory} from "./factory";
 import UniversalProvider from "@walletconnect/universal-provider";
-import {ISolanaSession} from "./session/solana";
-import {IEipSession} from "./session/eip155";
+import {type ISolanaSession} from "./session/solana";
+import {type IEipSession} from "./session/eip155";
 
 
 export interface TestSessions {

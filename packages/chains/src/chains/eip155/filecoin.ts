@@ -1,5 +1,5 @@
 import { filecoin as vfilecoin } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const filecoin: Chain = {

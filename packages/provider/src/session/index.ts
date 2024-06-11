@@ -1,9 +1,9 @@
-import { Chain } from '@uni-wc/chains';
+import { type Chain } from '@uni-wc/chains';
 import {EipSession} from "./eip155";
 import UniversalProvider from "@walletconnect/universal-provider";
 import {chainById, solana, solanadev} from "@uni-wc/chains";
-import {ISolanaSession, SolanaSession} from "./solana";
-import {IContext} from "../factory";
+import {type ISolanaSession, SolanaSession} from "./solana";
+import {type IContext} from "../factory";
 
 export interface ISessionFactory {
 	topic: string,

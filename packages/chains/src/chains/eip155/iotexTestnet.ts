@@ -1,5 +1,5 @@
 import { iotexTestnet as viotexTestnet } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const iotexTestnet: Chain = {

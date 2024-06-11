@@ -1,7 +1,6 @@
-import { UniversalProvider, default as Provider }   from '@walletconnect/universal-provider';
-import { UniversalProviderOpts } from '@walletconnect/universal-provider'
-import {ISessionFactory, SessionFactory} from "./session";
-import {getDefaultLoggerOptions, Logger} from "@walletconnect/logger";
+import { UniversalProvider, default as Provider, type UniversalProviderOpts }   from '@walletconnect/universal-provider';
+import {type ISessionFactory, SessionFactory} from "./session";
+import {getDefaultLoggerOptions, type Logger} from "@walletconnect/logger";
 import {SignClient, default as ISignClient} from "@walletconnect/sign-client";
 import {pino} from 'pino';
 const  RELAY_URL = "wss://relay.walletconnect.com";

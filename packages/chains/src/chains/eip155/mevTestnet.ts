@@ -1,5 +1,5 @@
 import { mevTestnet as vmevTestnet } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const mevTestnet: Chain = {

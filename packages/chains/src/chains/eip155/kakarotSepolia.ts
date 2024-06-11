@@ -1,5 +1,5 @@
 import { kakarotSepolia as vkakarotSepolia } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const kakarotSepolia: Chain = {

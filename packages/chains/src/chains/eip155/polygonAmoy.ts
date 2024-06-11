@@ -1,5 +1,5 @@
 import { polygonAmoy as vpolygonAmoy } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const polygonAmoy: Chain = {

@@ -1,5 +1,5 @@
 import { zilliqa as vzilliqa } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const zilliqa: Chain = {

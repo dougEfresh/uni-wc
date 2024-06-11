@@ -1,5 +1,5 @@
 import { astarZkyoto as vastarZkyoto } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const astarZkyoto: Chain = {

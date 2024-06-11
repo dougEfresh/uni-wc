@@ -1,15 +1,15 @@
 import {
-	AccountInfo,
+	type AccountInfo,
 	Authorized,
 	Keypair,
-	ParsedAccountData,
+	type ParsedAccountData,
 	PublicKey,
-	Signer,
+	type Signer,
 	StakeProgram,
 } from "@solana/web3.js";
 import {Buffer} from "buffer";
-import {IContext, ISolanaSession} from "@uni-wc/provider";
-import {Logger} from "pino";
+import {type IContext, type ISolanaSession} from "@uni-wc/provider";
+import {type Logger} from '@walletconnect/logger';
 
 
 

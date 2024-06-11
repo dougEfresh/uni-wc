@@ -7,7 +7,7 @@
   "types": "dist/types/index.d.ts",
   "typings": "dist/types/index.d.ts",
   "scripts": {
-    "build": "NODE_OPTIONS=--experimental-vm-modules babel src --out-dir dist --extensions .ts && tsc",
+    "build": "NODE_OPTIONS=--experimental-vm-modules babel src --out-dir dist --extensions .ts",
     "build:esm+types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

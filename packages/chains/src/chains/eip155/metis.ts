@@ -1,5 +1,5 @@
 import { metis as vmetis } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const metis: Chain = {

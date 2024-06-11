@@ -1,5 +1,5 @@
 import { haqqTestedge2 as vhaqqTestedge2 } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const haqqTestedge2: Chain = {

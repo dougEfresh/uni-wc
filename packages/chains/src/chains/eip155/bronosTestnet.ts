@@ -1,5 +1,5 @@
 import { bronosTestnet as vbronosTestnet } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const bronosTestnet: Chain = {

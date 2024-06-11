@@ -1,5 +1,5 @@
 import {defineChain} from "viem";
-import {Chain} from "./chain";
+import {type Chain} from "./chain";
 
 const vsolmain = defineChain({
 	id: -1,

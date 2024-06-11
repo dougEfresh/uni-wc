@@ -1,5 +1,5 @@
 import { mandala as vmandala } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const mandala: Chain = {

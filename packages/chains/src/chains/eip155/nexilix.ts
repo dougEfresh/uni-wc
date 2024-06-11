@@ -1,5 +1,5 @@
 import { nexilix as vnexilix } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const nexilix: Chain = {

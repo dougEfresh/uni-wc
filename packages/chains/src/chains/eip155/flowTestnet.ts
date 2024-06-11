@@ -1,5 +1,5 @@
 import { flowTestnet as vflowTestnet } from "viem/chains";
-import {Chain} from "../chain";
+import {type Chain} from "../chain";
 
 
 export const flowTestnet: Chain = {
