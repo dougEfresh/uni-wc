@@ -3,20 +3,38 @@ import {beforeAll, expect} from "@jest/globals";
 import {UniversalProviderFactory} from "@uni-wc/provider";
 import {Keypair, LAMPORTS_PER_SOL, PublicKey, StakeProgram, SystemProgram} from "@solana/web3.js";
 import {test_init, TestSessions} from "../src";
-import {Stake as SolStatke} from "@uni-wc/session-solana";
+import {Stake as SolStatke, TransactionSession as SolTransaction, TokenManagement as SolToken} from "@uni-wc/session-solana";
+import process from "node:process";
+import {CHAINS} from "@uni-wc/chains";
+
 
 dotenv.config({
 	path: "../../.env"
 });
 
+for (const envKey in process.env) {
+	const chainId = envKey.replace("_", ":");
+	const chain = CHAINS.get(chainId);
+	if (chain) {
+		console.log("using custom RPC ", process.env[envKey]);
+		chain.vchain.rpcUrls["custom"] = {
+			http: process.env[envKey]!.split(","),
+		};
+	}
+}
+
 
 let sessions: TestSessions;
 let solStaker: SolStatke;
+let solTransaction: SolTransaction;
+
 
 beforeAll(async () => {
 	try {
+
 		sessions = await test_init();
 		solStaker = await SolStatke.init(sessions.solSession, sessions.ctx);
+		solTransaction = new SolTransaction(sessions.solSession);
 	} catch (e) {
 		console.error(e);
 	}
@@ -63,6 +81,23 @@ describe('solana-sign', () => {
 
 });
 
+
+describe('solana-transactions', () => {
+	test('send', async () => {
+		const to = new PublicKey("HjNrrvRgpQzQsgz3HMdBNVDSnDkstQELMmTuw7iT41Jn");
+		const sig = await solTransaction.send(to, 0.00001 * LAMPORTS_PER_SOL);
+		const block = await sessions.solSession.connection.getLatestBlockhash();
+		const status = await sessions.solSession.connection.confirmTransaction({
+			signature: sig,
+			blockhash: block.blockhash,
+			lastValidBlockHeight: block.lastValidBlockHeight
+		}, "finalized");
+		expect(status).toBeDefined();
+		expect(status.value).not.toBeNull();
+		expect(status.value).toBeDefined();
+		expect(status.value!.err).toBeNull();
+	});
+});
 
 describe('solana-stake', () => {
 	test('create', async () => {

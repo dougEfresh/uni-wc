@@ -6,8 +6,9 @@
   "types": "dist/types/index.d.ts",
   "typings": "dist/types/index.d.ts",
   "scripts": {
-    "build": "pnpm run build:esm+types",
-    "build:esm+types": "NODE_OPTIONS=--experimental-vm-modules babel src --out-dir dist --extensions .ts && tsc",
+    "build": "pnpm run build:babel",
+    "build:babel": "babel src --out-dir dist --extensions .ts",
+    "build:types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "test": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest"

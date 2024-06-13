@@ -7,7 +7,7 @@ const  RELAY_URL = "wss://relay.walletconnect.com";
 
 export interface IContext {
 	dryRun: boolean,
-	logger: Logger
+	logger: Logger,
 }
 
 interface ProviderOpts extends UniversalProviderOpts {
@@ -63,11 +63,12 @@ export class UniversalProviderFactory {
 		const logger: Logger = UniversalProviderFactory.createLogger(UniversalProviderFactory.providerOpts);
 		UniversalProviderFactory.context = {
 			logger: logger,
-			dryRun: UniversalProviderFactory.providerOpts.dryRun
+			dryRun: UniversalProviderFactory.providerOpts.dryRun,
 		};
 		if (!UniversalProviderFactory.providerOpts.client) {
 			UniversalProviderFactory.providerOpts.client = await UniversalProviderFactory.createSignClient(logger, UniversalProviderFactory.providerOpts);
 		}
+		UniversalProviderFactory.providerOpts.client.core.storage
 		UniversalProviderFactory.provider = await UniversalProvider.init(UniversalProviderFactory.providerOpts);
 		UniversalProviderFactory.provider.logger = logger;
 		UniversalProviderFactory.provider.on('display_uri', UniversalProviderFactory.providerOpts.sessionProposalCallback)

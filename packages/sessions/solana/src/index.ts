@@ -1,2 +1,3 @@
-export {type ITransactionSession, TransactionSession } from './transaction.js';
-export {type IStake, Stake } from './stake.js';
+export {type ITransactionSession, TransactionSession } from './transaction';
+export {type IStake, Stake } from './stake';
+export { TokenManagement } from './token-management';

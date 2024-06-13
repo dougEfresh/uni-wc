@@ -26,7 +26,8 @@ export const ALL_CHAINS: Chain[] = [
 	polygon,
 	arbitrum,
 	celo,
-	zkSync
+	zkSync,
+	cosmos,
 ]
 
 export const CHAINS: Map<string, Chain> = new Map(

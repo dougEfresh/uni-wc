@@ -6,9 +6,10 @@
   "types": "dist/types/index.d.ts",
   "typings": "dist/types/index.d.ts",
   "scripts": {
-    "tbuild": "pnpm run build:esm+types",
-    "build:esm+types": "tsc",
-    "build": "NODE_OPTIONS=--experimental-vm-modules babel src --out-dir dist --extensions .ts && tsc",
+    "tbuild": "pnpm run build:build",
+    "build:babel": "babel src --out-dir dist --extensions .ts",
+    "build:types": "tsc",
+    "build": "babel src --out-dir dist --extensions .ts",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit"
   },

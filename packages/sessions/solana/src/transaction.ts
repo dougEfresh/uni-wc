@@ -1,4 +1,4 @@
-import {PublicKey, SystemProgram, Transaction} from "@solana/web3.js";
+import {PublicKey, SystemProgram} from "@solana/web3.js";
 import {type ISolanaSession} from "@uni-wc/provider";
 
 export interface ITransactionSession {
@@ -17,12 +17,6 @@ export class TransactionSession implements ITransactionSession{
 			lamports: lamports,
 			toPubkey: to
 		})
-		const tx = await this.session.signTransaction([intx]);
-		const sig = await this.session.connection.sendRawTransaction(tx.serialize(), {
-			maxRetries: 5,
-		});
-		return sig;
+		return this.session.sendAndConfirm([intx], undefined);
 	}
-
-
 }

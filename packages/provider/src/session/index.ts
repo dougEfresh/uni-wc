@@ -1,15 +1,17 @@
-import { type Chain } from '@uni-wc/chains';
+import {type Chain, cosmos} from '@uni-wc/chains';
 import {EipSession} from "./eip155";
 import UniversalProvider from "@walletconnect/universal-provider";
 import {chainById, solana, solanadev} from "@uni-wc/chains";
 import {type ISolanaSession, SolanaSession} from "./solana";
 import {type IContext} from "../factory";
+import {CosmosSession, ICosmosSession} from "./cosmos";
 
 export interface ISessionFactory {
 	topic: string,
 	chains: Chain[];
 	eip(chainId: string): EipSession | undefined;
 	solana(): ISolanaSession | undefined;
+	cosmos(): ICosmosSession | undefined;
 	ping(): Promise<void>;
 }
 
@@ -22,6 +24,8 @@ export class SessionFactory implements ISessionFactory {
 	readonly eipMap: EipMap;
 	readonly topic: string;
 	private readonly solanaSession: ISolanaSession | undefined = undefined;
+	private readonly cosmosSession: ICosmosSession | undefined = undefined;
+
 	private provider: UniversalProvider;
 	private readonly context: IContext;
 
@@ -37,13 +41,21 @@ export class SessionFactory implements ISessionFactory {
 				this.eipMap[chain.id] = new EipSession(chain, provider, context)
 			}
 		}
-		const c = this.chains.find((c) => c.id == solana.id || c.id == solanadev.id);
+		let c = this.chains.find((c) => c.id == solana.id || c.id == solanadev.id);
 		if (c) {
 			//TODO check !!
 			this.solanaSession = new SolanaSession(c, provider.rpcProviders['solana'], provider.session.topic, context);
 		}
+		c = this.chains.find((c) => c.id == cosmos.id);
+		if (c) {
+			this.cosmosSession = new CosmosSession(c, provider.rpcProviders['cosmos'], provider.session.topic, context);
+		}
 		this.topic = provider.session.topic;
 		this.context = context;
+	}
+
+	cosmos(): ICosmosSession | undefined {
+		return this.cosmosSession;
 	}
 
 	solana(): ISolanaSession | undefined {

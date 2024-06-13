@@ -2,14 +2,19 @@ import {
 	Transaction,
 	Connection,
 	PublicKey,
-	TransactionInstruction, type SignatureResult, ComputeBudgetProgram, type Signer
+	TransactionInstruction,
+	type SignatureResult,
+	ComputeBudgetProgram,
+	type Signer,
+	type ConnectionConfig,
+	FetchMiddleware
 } from '@solana/web3.js';
 import {type Chain} from "@uni-wc/chains";
 import bs58 from 'bs58';
 import {type IContext} from "../factory";
-import { type Logger } from "@walletconnect/logger";
 import {DryRunModeError} from "./error";
 import {type IProvider} from "@walletconnect/universal-provider";
+import {BaseSession} from "./base-session";
 
 export interface ISolanaSession {
 	signMessage(msg: string): Promise<string>;
@@ -20,39 +25,36 @@ export interface ISolanaSession {
 	account: PublicKey
 }
 
-
-
 interface MessageResponse {
 	signature: string
 }
 
-export class SolanaSession implements ISolanaSession{
-	readonly chain: Chain;
+export class SolanaSession extends BaseSession implements ISolanaSession{
 	readonly account: PublicKey;
 	readonly connection: Connection;
 	readonly maxFeeMicroLamports: number;
-	readonly context: IContext;
-	readonly logger: Logger;
-	readonly session: IProvider;
-	readonly topic: string;
 
 	constructor(chain: Chain, session: IProvider, topic: string, context: IContext) {
-		if (!session.requestAccounts() || session.requestAccounts().length == 0) {
-			throw new Error("no sessions accounts available");
-		}
-		this.chain = chain;
+		super(chain, session, topic, context);
 		this.account = new PublicKey(session.requestAccounts()[0]);
+		const middleWareLogger: FetchMiddleware =  (url, options, fetch) => {
+			this.logger.debug("Sending RPC request " + JSON.stringify(options));
+			fetch(url, options);
+		};
+		const connectConfig: ConnectionConfig = {
+			fetchMiddleware: middleWareLogger,
+			commitment: "confirmed",
+			disableRetryOnRateLimit: true,
+			confirmTransactionInitialTimeout: 10,
+
+		}
 		if ("custom" in chain.vchain.rpcUrls) {
-			this.connection = new Connection(chain.vchain.rpcUrls["custom"].http[0]);
+			this.connection = new Connection(chain.vchain.rpcUrls["custom"].http[0], connectConfig)
 		} else {
 			// TODO check url
-			this.connection = new Connection(chain.vchain.rpcUrls.default.http[0]);
+			this.connection = new Connection(chain.vchain.rpcUrls.default.http[0], connectConfig);
 		}
 		this.maxFeeMicroLamports = 10000;
-		this.context = context;
-		this.logger = context.logger.child({context: "session-solana"});
-		this.session = session;
-		this.topic = topic;
 	}
 
 	async signMessage(msg: string): Promise<string> {

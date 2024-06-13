@@ -3,7 +3,7 @@ import {select, Separator, input, confirm} from "@inquirer/prompts";
 
 import {AccountLayout, TOKEN_PROGRAM_ID, TOKEN_2022_PROGRAM_ID} from "@solana/spl-token";
 import {LAMPORTS_PER_SOL, PublicKey} from "@solana/web3.js"
-import {type IStake, Stake, TransactionSession} from "@uni-wc/session-solana";
+import {type IStake, Stake, TokenManagement, TransactionSession} from "@uni-wc/session-solana";
 
 async function tokens(session: ISolanaSession, programId: PublicKey) {
 	const connection = session.connection;
@@ -19,6 +19,7 @@ async function tokens(session: ISolanaSession, programId: PublicKey) {
 	console.log("------------------------------------------------------------");
 	tokenAccounts.value.forEach((tokenAccount) => {
 		const accountData = AccountLayout.decode(tokenAccount.account.data);
+
 		console.log(`${new PublicKey(accountData.mint)}   ${accountData.amount}`);
 	})
 	console.log("------------------------------------------------------------");
@@ -85,6 +86,31 @@ async function handle_transaction(txSession: TransactionSession) {
 	console.log(sig);
 }
 
+async function handle_token_management(session: ISolanaSession) {
+	const manager = await TokenManagement.init(session, UniversalProviderFactory.context )
+	const answer = await select({
+		choices: [
+			{
+				name: "Info",
+				description: "",
+				value: "info"
+			}
+		],
+		pageSize: 5,
+		loop: true,
+		message: "Pick your poison"
+	})
+
+	switch (answer) {
+		case "info":
+			UniversalProviderFactory.context.logger.info(' ACCOUNTS ' + JSON.stringify(manager.tokens(TOKEN_PROGRAM_ID)));
+			await input({message: "continue"});
+			break;
+		default:
+			return;
+	}
+}
+
 export async function handle_solana(session: ISolanaSession) {
 	while (true) {
 		const answer = await select({
@@ -113,9 +139,9 @@ export async function handle_solana(session: ISolanaSession) {
 					description: "",
 				},
 				{
-					name: "Validators",
-					value: "validators",
-					description: "Balances...etc",
+					name: "Token Management",
+					value: "tokenmgt",
+					description: "SPL tokens",
 				},
 				new Separator(),
 				{
@@ -133,6 +159,7 @@ export async function handle_solana(session: ISolanaSession) {
 			const txSession = new TransactionSession(session);
 			switch (answer) {
 				case 'info':
+					console.log("getting slot");
 					const slot = await session.connection.getSlot();
 					const hash = await session.connection.getLatestBlockhash("confirmed");
 					console.log(`Slot ${slot}    Block: ${hash.blockhash}`);
@@ -147,9 +174,8 @@ export async function handle_solana(session: ISolanaSession) {
 				case 'transaction':
 					await handle_transaction(txSession);
 					break;
-				case 'validators':
-					const validators = await session.connection.getVoteAccounts();
-					console.log(`current validators ${validators.current.length}` );
+				case 'tokenmgt':
+					await handle_token_management(session);
 					break;
 				case 'stake':
 					await handle_stake(staker);

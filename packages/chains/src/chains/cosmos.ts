@@ -3,7 +3,7 @@ import {type Chain} from "./chain";
 
 const vcosmos = defineChain({
 	id: -1,
-	name: 'Cosmose',
+	name: 'Cosmos',
 	network: 'cosmos',
 	nativeCurrency: {
 		name: 'Cosmos',

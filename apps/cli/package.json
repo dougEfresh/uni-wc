@@ -5,7 +5,7 @@
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "export NODE_OPTIONS=--experimental-vm-modules;  babel src --out-dir dist --extensions .ts && tsc",
+    "build": "export NODE_OPTIONS=--experimental-vm-modules;  babel src --out-dir dist --extensions .ts",
     "build:esm+types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",

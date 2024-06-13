@@ -1,7 +1,7 @@
-import {select, Separator} from '@inquirer/prompts';
+import {input, select, Separator} from '@inquirer/prompts';
 import UniversalProvider from "@walletconnect/universal-provider";
 import {type IEipSession, type ISessionFactory, UniversalProviderFactory} from "@uni-wc/provider";
-import {chainById} from "@uni-wc/chains";
+import {chainById, cosmos, solana, solanadev} from "@uni-wc/chains";
 import {type Address} from "viem";
 import {handle_solana} from "./solana";
 
@@ -29,7 +29,7 @@ export async function displayMenu(): Promise<void> {
 	);
 	const choices = [
 		{
-			name: "Better Chains",
+			name: "Non EVM",
 			value: "betterchains",
 		},
 		{
@@ -104,9 +104,22 @@ export async function displayMenu(): Promise<void> {
 				message: "Which Chain?",
 				pageSize: 5, theme: undefined
 			})
-			const sol = session.solana();
-			if (sol) {
-				await handle_solana(sol);
+			const c = chainById(bchain);
+			if (!c) {
+				throw new Error(`${bchain} is an unknown chain`);
+			}
+			if (c.id === solanadev.id || c.id == solana.id) {
+				const sol = session.solana();
+				if (sol) {
+					await handle_solana(sol);
+				}
+			}
+			if (c.id === cosmos.id) {
+				const cos = session.cosmos();
+				if (cos) {
+					console.log(cos.account);
+					await input({message: "blah"});
+				}
 			}
 			break;
 		case 'pair':

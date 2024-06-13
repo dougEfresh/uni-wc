@@ -6,8 +6,9 @@
   "types": "dist/types/index.d.ts",
   "typings": "dist/types/index.d.ts",
   "scripts": {
-    "build": "pnpm run build:esm+types",
-    "build:esm+types": "NODE_OPTIONS=--experimental-vm-modules babel src --out-dir dist --extensions .ts && tsc",
+    "build": "pnpm run build:babel",
+    "build:babel": "babel src --out-dir dist --extensions .ts",
+    "build:types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
     "testava": "pnpm run build && ava",
@@ -18,12 +19,15 @@
   "license": "ISC",
   "dependencies": {
     "@uni-wc/provider": "workspace:*",
+    "@uni-wc/chains": "workspace:*",
     "@solana/web3.js": "*",
     "@solana/spl-token": "*",
     "@jup-ag/api": "*",
     "@walletconnect/logger": "*"
   },
   "devDependencies": {
+    "@walletconnect/universal-provider": "*",
+    "@walletconnect/types": "*",
     "@babel/core": "*",
     "@babel/cli": "*",
     "@types/node": "*",
@@ -31,6 +35,11 @@
     "eslint-config-next": "*",
     "ts-node": "*",
     "typescript": "*",
+    "jest": "*",
+    "ts-jest": "*",
+    "jest-mock-extended": "*",
+    "@jest/globals": "*",
+    "@types/jest": "*",
     "@babel/preset-env": "*",
     "babel-jest": "*",
     "babel-plugin-add-import-extension": "*"
