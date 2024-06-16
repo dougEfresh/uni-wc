@@ -61,7 +61,7 @@ const vsoldev = defineChain({
 			//apiUrl: 'https://blockscout.acala.network/api',
 		},
 	},
-	testnet: false,
+	testnet: true,
 });
 
 export const solana: Chain = {

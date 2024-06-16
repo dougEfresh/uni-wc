@@ -10,11 +10,8 @@ const config: Config = {
 	rootDir: "./",
 	testEnvironment: "node",
 	modulePaths: ["<rootDir>"],
-	detectLeaks: false,
-	detectOpenHandles: false,
-	testTimeout: 90000,
 	testMatch: [
-		"<rootDir>/integration/*.test.ts",
+		"<rootDir>/src/**/*.test.ts",
 	]
 };
 

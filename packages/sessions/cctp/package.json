@@ -1,5 +1,5 @@
 {
-  "name": "@uni-wc/provider",
+  "name": "@uni-wc/session-cctp",
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
@@ -11,38 +11,41 @@
     "build:types": "tsc",
     "clean": "rm -rf dist",
     "typecheck": "tsc --noEmit",
-    "test": "NODE_OPTIONS=--experimental-vm-modules pnpm run build && jest"
+    "test":  "pnpm run build && jest"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@uni-wc/provider": "workspace:*",
     "@uni-wc/chains": "workspace:*",
-    "viem": "*",
     "@solana/web3.js": "*",
+    "viem": "*",
     "@walletconnect/logger": "*",
-    "@walletconnect/universal-provider": "2.13.3",
-    "@walletconnect/sign-client": "*",
-    "bs58": "*"
+    "@wormhole-foundation/sdk-base": "*",
+    "@wormhole-foundation/sdk": "*",
+    "@wormhole-foundation/sdk-evm": "*",
+    "@wormhole-foundation/sdk-definitions": "*",
+    "@wormhole-foundation/sdk-solana": "*",
+    "@wormhole-foundation/sdk-connect": "*"
   },
   "devDependencies": {
+    "@walletconnect/universal-provider": "*",
     "@walletconnect/types": "*",
-    "qrcode-terminal": "*",
-    "@babel/preset-env": "*",
     "@babel/core": "*",
     "@babel/cli": "*",
-    "babel-jest": "*",
-    "babel-plugin-add-import-extension": "*",
+    "@types/node": "*",
+    "eslint": "*",
+    "eslint-config-next": "*",
+    "ts-node": "*",
+    "typescript": "*",
     "jest": "*",
     "ts-jest": "*",
     "jest-mock-extended": "*",
     "@jest/globals": "*",
     "@types/jest": "*",
-    "@types/node": "*",
-    "eslint": "^8",
-    "eslint-config-next": "*",
-    "ts-node": "*",
-    "dotenv": "*",
-    "typescript": "*"
+    "@babel/preset-env": "*",
+    "babel-jest": "*",
+    "babel-plugin-add-import-extension": "*"
   }
 }

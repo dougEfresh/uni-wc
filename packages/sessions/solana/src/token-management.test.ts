@@ -36,7 +36,7 @@ describe('solana-token-manager', () => {
 			const usdc = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 			const tokens = await tokenManager.tokens();
 			expect(tokens.length).toBeGreaterThan(0);
-			const ownerAccount = tokens.find((t) => t.account.mint.equals(usdc));
+			const ownerAccount = tokens.find((t) => t.info.mint.equals(usdc));
 			expect(ownerAccount).toBeDefined();
 			const senderAccount = getAssociatedTokenAddressSync(usdc, to, false, TOKEN_PROGRAM_ID);
 		let txin: TransactionInstruction[] = [];
@@ -45,7 +45,7 @@ describe('solana-token-manager', () => {
 			return Promise.resolve("sig");
 		});
 		// Hmzk5ohDH7DmZkAboxwihNFxMB91Dhu45iyBqqm3s7Db
-		const sig = await tokenManager.transfer(to, ownerAccount!, TOKEN_PROGRAM_ID, 1);
+		const sig = await tokenManager.transfer(to, ownerAccount!, BigInt(1));
 		expect(txin.length).toEqual(1);
 		expect(sig).toEqual("sig");
 		}

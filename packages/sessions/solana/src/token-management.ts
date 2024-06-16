@@ -11,9 +11,9 @@ import {
 import {PublicKey, TransactionInstruction} from "@solana/web3.js";
 import {type IKeyValueStorage} from "@walletconnect/keyvaluestorage";
 
-interface TokenInfo {
+export interface TokenInfo {
 	tokenAccount: PublicKey,
-	account: RawAccount,
+	info: RawAccount,
 	programId: PublicKey,
 	meta?: JupToken,
 }
@@ -50,9 +50,12 @@ class NoopStorage implements IKeyValueStorage {
 
 }
 async function fetchTokens(): Promise<JupToken[]> {
-	const response = await fetch('httcd ps://token.jup.ag/strict');
+	/*
+	const response = await fetch('https://token.jup.ag/strict');
 	const data = await response.json() as JupToken[];
 	return data;
+	 */
+	return [];
 }
 
 export class TokenManagement extends BaseSession{
@@ -61,7 +64,7 @@ export class TokenManagement extends BaseSession{
 
 	constructor(ctx: IContext, session: ISolanaSession, storage?: IKeyValueStorage| undefined) {
 		super(session, ctx, "token-management");
-		this.storage = storage ? storage : new NoopStorage();
+		this.storage = !storage ? new NoopStorage() : storage;
 	}
 
 	async tokens(): Promise<TokenInfo[]> {
@@ -78,7 +81,7 @@ export class TokenManagement extends BaseSession{
 			const tokenAccountInfo: TokenInfo[] = tokenAccount.value.map((value) => (
 			 {
 				 tokenAccount: value.pubkey,
-				 account: AccountLayout.decode(value.account.data),
+				 info: AccountLayout.decode(value.account.data),
 				 programId: program,
 				 meta:  jupTokens.find((t) => t.address == value.pubkey.toString())
 				}
@@ -88,14 +91,14 @@ export class TokenManagement extends BaseSession{
 		return tokens;
 	}
 
-	public async transfer(to: PublicKey, token: TokenInfo, program: PublicKey, amount: number): Promise<string> {
-		const senderAccount = await getAssociatedTokenAddress(token.account.mint, to, false, program);
+	public async transfer(to: PublicKey, token: TokenInfo, amount: bigint): Promise<string> {
+		const senderAccount = await getAssociatedTokenAddress(token.info.mint, to, false, token.programId);
 		const onChain = await this.session.connection.getAccountInfo(senderAccount);
 		const instructions: TransactionInstruction[] = [];
 		if (!onChain) {
-			instructions.push(createAssociatedTokenAccountInstruction(this.session.account, senderAccount, to, token.account.mint, program));
+			instructions.push(createAssociatedTokenAccountInstruction(this.session.account, senderAccount, to, token.info.mint, token.programId));
 		}
-		instructions.push(createTransferInstruction(token.tokenAccount, senderAccount, this.session.account, amount, undefined, program));
+		instructions.push(createTransferInstruction(token.tokenAccount, senderAccount, this.session.account, amount, undefined, token.programId));
 		return this.session.sendAndConfirm(instructions, undefined);
 	}
 }

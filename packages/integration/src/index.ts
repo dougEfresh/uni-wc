@@ -1,6 +1,6 @@
 import pino from "pino";
 import {Fireblocks, type Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
-import {NAMESPACE_TEST, sepolia} from "@uni-wc/chains";
+import {baseSepolia, NAMESPACE_TEST, sepolia} from "@uni-wc/chains";
 import {UniversalProviderFactory, type ISolanaSession, type IEipSession, type IContext} from "@uni-wc/provider";
 import UniversalProvider from "@walletconnect/universal-provider";
 
@@ -9,6 +9,7 @@ export interface TestSessions {
 	provider: UniversalProvider;
 	solSession: ISolanaSession;
 	sepoliaSession: IEipSession;
+	baseSepoliaSession: IEipSession
 	ctx: IContext;
 }
 
@@ -88,7 +89,12 @@ export async function test_init(): Promise<TestSessions> {
 	if (!_sepolia) {
 		throw new Error("no sepolia session found");
 	}
+	const _baseSepolia = sessions!.eip(baseSepolia.id);
+	if (!_baseSepolia) {
+		throw new Error("no sepolia session found");
+	}
 	const sepoliaSession = _sepolia!;
+	const baseSepoliaSession = _baseSepolia;
 	const s = sessions.solana();
 	if (!s) {
 		throw new Error("no solana session found");
@@ -98,6 +104,7 @@ export async function test_init(): Promise<TestSessions> {
 		provider,
 		solSession,
 		sepoliaSession,
+		baseSepoliaSession,
 		ctx: {
 			dryRun: false,
 			logger: logger

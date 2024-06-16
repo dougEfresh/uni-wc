@@ -11,7 +11,6 @@ export interface IContext {
 }
 
 interface ProviderOpts extends UniversalProviderOpts {
-	log?: Logger,
 	disableRequestQueue?: boolean,
 	dryRun: boolean,
 	sessionProposalCallback: (uri: string) => Promise<void>
@@ -51,14 +50,15 @@ export class UniversalProviderFactory {
 	}
 
 	static createLogger(opts: ProviderOpts) : Logger {
-		if (opts.log) {
-			return opts.log;
-		}
 		if (opts.logger) {
-			return pino(getDefaultLoggerOptions({ level: opts.logger}));
+			if (typeof opts.logger === "string") {
+				return pino(getDefaultLoggerOptions({level: opts.logger}));
+			}
+			return opts.logger;
 		}
 		return pino(getDefaultLoggerOptions({ level: "error"}));
 	}
+
 	public static async init() {
 		const logger: Logger = UniversalProviderFactory.createLogger(UniversalProviderFactory.providerOpts);
 		UniversalProviderFactory.context = {
@@ -68,9 +68,7 @@ export class UniversalProviderFactory {
 		if (!UniversalProviderFactory.providerOpts.client) {
 			UniversalProviderFactory.providerOpts.client = await UniversalProviderFactory.createSignClient(logger, UniversalProviderFactory.providerOpts);
 		}
-		UniversalProviderFactory.providerOpts.client.core.storage
 		UniversalProviderFactory.provider = await UniversalProvider.init(UniversalProviderFactory.providerOpts);
-		UniversalProviderFactory.provider.logger = logger;
 		UniversalProviderFactory.provider.on('display_uri', UniversalProviderFactory.providerOpts.sessionProposalCallback)
 		// Subscribe to session ping
 		UniversalProviderFactory.provider.on(

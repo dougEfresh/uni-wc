@@ -100,7 +100,7 @@ export class Stake implements IStake {
 			lamports: lamports,
 			stakePubkey: acct.publicKey,
 		});
-		const sig = await this.session.sendAndConfirm(createStakeAccountTx.instructions, acct);
+		const sig = await this.session.sendAndConfirm(createStakeAccountTx.instructions, [acct]);
 		for  (let i = 0; i < 4; i++) {
 			this.logger.debug(`checking account ${acct.publicKey.toString()}`)
 			await new Promise(resolve => setTimeout(resolve, 3000));

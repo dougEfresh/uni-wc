@@ -18,8 +18,10 @@ import {BaseSession} from "./base-session";
 
 export interface ISolanaSession {
 	signMessage(msg: string): Promise<string>;
-	signTransaction(txin: TransactionInstruction[]): Promise<Transaction>;
-	sendAndConfirm(tx: TransactionInstruction[], kp: Signer | undefined): Promise<string>;
+	signTransactionFees(txin: TransactionInstruction[]): Promise<Transaction>;
+	signTransaction(tx: Transaction): Promise<string>;
+	send(tx: Transaction): Promise<string>;
+	sendAndConfirm(tx: TransactionInstruction[], kp?: Signer[] | undefined): Promise<string>;
 	connection: Connection;
 	chain: Chain;
 	account: PublicKey
@@ -38,15 +40,18 @@ export class SolanaSession extends BaseSession implements ISolanaSession{
 		super(chain, session, topic, context);
 		this.account = new PublicKey(session.requestAccounts()[0]);
 		const middleWareLogger: FetchMiddleware =  (url, options, fetch) => {
-			this.logger.debug("Sending RPC request " + JSON.stringify(options));
+			if (options && options.body) {
+				this.logger.debug(JSON.stringify(options.body));
+			} else {
+				this.logger.debug("Sending RPC request " + JSON.stringify(url));
+			}
 			fetch(url, options);
 		};
 		const connectConfig: ConnectionConfig = {
 			fetchMiddleware: middleWareLogger,
 			commitment: "confirmed",
 			disableRetryOnRateLimit: true,
-			confirmTransactionInitialTimeout: 10,
-
+			confirmTransactionInitialTimeout: 5000,
 		}
 		if ("custom" in chain.vchain.rpcUrls) {
 			this.connection = new Connection(chain.vchain.rpcUrls["custom"].http[0], connectConfig)
@@ -73,7 +78,25 @@ export class SolanaSession extends BaseSession implements ISolanaSession{
 		return Promise.resolve(sig.signature);
 	}
 
-	async signTransaction(txin: TransactionInstruction[]): Promise<Transaction> {
+	async signTransaction(tx: Transaction): Promise<string> {
+		const serializedTransaction = tx.serialize({
+			requireAllSignatures: false,
+			verifySignatures: false,
+		}).toString('base64');
+		const sig: MessageResponse = await this.session.request({
+			topic: this.topic,
+			chainId: this.chain.id,
+			request: {
+				method: "solana_signTransaction",
+				params: {
+					transaction: serializedTransaction
+				}
+			}
+		});
+		return sig.signature;
+	}
+
+	async signTransactionFees(txin: TransactionInstruction[]): Promise<Transaction> {
 		const hash = await this.connection.getLatestBlockhash();
 		const tx = new Transaction();
 		tx.recentBlockhash = hash.blockhash;
@@ -150,20 +173,39 @@ export class SolanaSession extends BaseSession implements ISolanaSession{
 		return fee;
 	}
 
-	async sendAndConfirm(tx: TransactionInstruction[], kp: Signer | undefined): Promise<string> {
+	async send(tx: Transaction): Promise<string> {
+		const serialized = tx.serialize({
+			verifySignatures: true,
+			requireAllSignatures: false
+		})
+		const sig = await this.connection.sendRawTransaction(serialized, {
+			maxRetries: 2,
+			skipPreflight: true,
+		});
+		return sig;
+	}
+
+	async sendAndConfirm(tx: TransactionInstruction[], signers?: Signer[] | undefined): Promise<string> {
 		const fee = ComputeBudgetProgram.setComputeUnitPrice({
 			microLamports: await this.computeFee()
 		});
 		const feeWithTransaction = [fee, ...tx];
-		const signed = await this.signTransaction(feeWithTransaction);
-		if (kp) {
-			signed.partialSign(kp);
+		const signed = await this.signTransactionFees(feeWithTransaction);
+		if (signers) {
+			for (const signer of signers) {
+				signed.partialSign(signer);
+			}
 		}
 		if (this.context.dryRun) {
 			throw new DryRunModeError(signed);
 		}
-		const sig = await this.connection.sendRawTransaction(signed.serialize(), {
-			maxRetries: 5,
+		const serialized = signed.serialize({
+			verifySignatures: true,
+			requireAllSignatures: true,
+		})
+		const sig = await this.connection.sendRawTransaction(serialized, {
+			maxRetries: 2,
+			skipPreflight: false,
 		});
 		if (
 			signed.recentBlockhash != null &&

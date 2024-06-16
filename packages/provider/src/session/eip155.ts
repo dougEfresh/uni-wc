@@ -2,6 +2,7 @@ import {type Address, createPublicClient, createWalletClient, custom, http, type
 import { type Chain } from '@uni-wc/chains';
 import UniversalProvider from "@walletconnect/universal-provider";
 import {type IContext} from "../factory";
+import { Logger } from '@walletconnect/logger';
 
 export interface IEipSession {
 	pc: PublicClient,
@@ -19,10 +20,11 @@ export class EipSession implements IEipSession {
 	readonly wc: WalletClient;
 	readonly chain: Chain;
 	readonly account: Address;
+	readonly logger: Logger;
 
 	constructor(c: Chain, provider: UniversalProvider, context: IContext) {
 		const walletConnectProvider: Eip155Provider | undefined = provider.rpcProviders['eip155'] as Eip155Provider;
-
+		this.logger = context.logger.child({context: `eip-${c.id}`});
 		if (walletConnectProvider.requestAccounts().length == 0) {
 			throw new Error("balagan");
 		}
@@ -30,13 +32,26 @@ export class EipSession implements IEipSession {
 		this.chain = c;
 		this.pc = createPublicClient({
 			chain: c.vchain,
-			transport: http(),
+			transport: http(undefined, {
+				onFetchRequest: (req) => {
+					console.log(JSON.stringify(req.body));
+					this.logger.debug({chain: c.id, req: JSON.stringify(req.body)})
+				},
+				onFetchResponse: (res)  => {
+					console.log(JSON.stringify(res.body));
+					this.logger.debug({chain: c.id, req: JSON.stringify(res.body)})
+				}
+			}),
 			key: this.account as Address,
 		}) as PublicClient;
+		const l = this.logger;
 		this.wc = createWalletClient({
 			chain: c.vchain,
+			//account: this.account,
 			transport: custom({
 				async request({ method, params }) {
+					console.log(JSON.stringify(params));
+					l.debug(`sending request ${method}  ${JSON.stringify(params)}`);
 					await provider.request({
 						method,
 						params

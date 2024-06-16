@@ -88,7 +88,7 @@ describe('solana', () => {
 			}
 			return Promise.resolve(sig);
 		});
-		const result = await session.signTransaction([txin]);
+		const result = await session.signTransactionFees([txin]);
 		expect(result.recentBlockhash).toBeDefined();
 		expect(result.recentBlockhash!.length).toBeGreaterThanOrEqual(1);
 

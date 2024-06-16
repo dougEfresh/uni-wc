@@ -12,6 +12,7 @@ import {arbitrum} from "./eip155/arbitrum";
 import {celo} from "./eip155/celo";
 import {zkSync} from "./eip155/zkSync";
 import {cosmos} from "./cosmos";
+import {polygonAmoy} from "./eip155/polygonAmoy";
 
 export const ALL_CHAINS: Chain[] = [
 	eth,
@@ -24,6 +25,7 @@ export const ALL_CHAINS: Chain[] = [
 	celoAlfajores,
 	optimism,
 	polygon,
+	polygonAmoy,
 	arbitrum,
 	celo,
 	zkSync,
