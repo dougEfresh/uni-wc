@@ -51,6 +51,7 @@ export async function main()
 	*/
 
 	const logger = pino({
+		level: lvl,
 		transport: {
 			level: lvl,
 			target: 'pino-pretty',
@@ -73,8 +74,7 @@ export async function main()
 		dryRun: dryRun,
 		client: undefined,
 		disableProviderPing: false,
-		logger: undefined,
-		log: logger,
+		logger: logger,
 		metadata: {
 			name: "uni-walletconnect",
 			description: "just use walletconnect",

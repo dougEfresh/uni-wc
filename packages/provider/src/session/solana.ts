@@ -41,6 +41,7 @@ export class SolanaSession extends BaseSession implements ISolanaSession{
 		this.account = new PublicKey(session.requestAccounts()[0]);
 		const middleWareLogger: FetchMiddleware =  (url, options, fetch) => {
 			if (options && options.body) {
+				//console.log(JSON.stringify(options.body));
 				this.logger.debug(JSON.stringify(options.body));
 			} else {
 				this.logger.debug("Sending RPC request " + JSON.stringify(url));
@@ -59,7 +60,7 @@ export class SolanaSession extends BaseSession implements ISolanaSession{
 			// TODO check url
 			this.connection = new Connection(chain.vchain.rpcUrls.default.http[0], connectConfig);
 		}
-		this.maxFeeMicroLamports = 10000;
+		this.maxFeeMicroLamports = 50000;
 	}
 
 	async signMessage(msg: string): Promise<string> {
@@ -129,7 +130,6 @@ export class SolanaSession extends BaseSession implements ISolanaSession{
 		tx.addSignature(this.account, buf);
 		return Promise.resolve(tx);
 	}
-
 
 	async computeFee(): Promise<number> {
 		const prioritizationFeeObjects = await this.connection.getRecentPrioritizationFees();

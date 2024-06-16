@@ -4,14 +4,18 @@ import {
 	Keypair,
 	type ParsedAccountData,
 	PublicKey,
-	type Signer,
+	type Signer, StakeActivationData,
 	StakeProgram,
 } from "@solana/web3.js";
 import {Buffer} from "buffer";
 import {type IContext, type ISolanaSession} from "@uni-wc/provider";
 import {type Logger} from '@walletconnect/logger';
 
-
+interface Account {
+	pubkey: PublicKey;
+	account: AccountInfo<Buffer | ParsedAccountData>;
+	status: StakeActivationData;
+}
 
 export class AccountNotFound extends Error {
 	public pk: PublicKey
@@ -26,11 +30,8 @@ export class AccountNotFound extends Error {
 }
 
 export interface IStake {
-	stakedAccounts(): Array<{
-		pubkey: PublicKey;
-		account: AccountInfo<Buffer | ParsedAccountData>;
-	}>;
-
+	stakedAccounts(): Array<Account>
+	
 	stake(lamports: number, signer: Signer | undefined): Promise<string>;
 
 	deactivate(stakeAccount: PublicKey): Promise<string>;
@@ -76,6 +77,7 @@ export class Stake implements IStake {
 			},
 		);
 		ctx.logger.debug(`Got ${accounts.length} staked accounts`);
+		const b = await session.connection.getStakeActivation(accounts[0].pubkey);
 		return new Stake(session, accounts, ctx);
 	}
 

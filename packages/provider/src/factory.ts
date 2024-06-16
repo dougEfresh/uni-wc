@@ -37,8 +37,8 @@ export class UniversalProviderFactory {
 	static async createSignClient(logger: Logger, opts: UniversalProviderOpts): Promise<ISignClient> {
 		return SignClient.init({
 			logger: logger,
-			relayUrl: opts.relayUrl,
-			projectId: opts.projectId || RELAY_URL,
+			relayUrl: opts.relayUrl || RELAY_URL,
+			projectId: opts.projectId,
 			metadata: opts.metadata,
 			storageOptions: opts.storageOptions,
 			storage: opts.storage,
