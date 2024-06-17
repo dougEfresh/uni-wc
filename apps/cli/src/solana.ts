@@ -232,7 +232,7 @@ async function show_stake_accounts(staker: IStake) {
 		choices.push({
 			name: a.pubkey.toString()  + ` (${a.account.lamports / LAMPORTS_PER_SOL} SOL)`,
 			value: i,
-			description: "",
+			description: a.status.state,
 		})
 	}
 	const answer = await select({

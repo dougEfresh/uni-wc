@@ -1,43 +1,19 @@
-import dotenv from 'dotenv';
 import {beforeAll, expect} from "@jest/globals";
 import {UniversalProviderFactory} from "@uni-wc/provider";
-import {Keypair, LAMPORTS_PER_SOL, PublicKey, StakeProgram, SystemProgram} from "@solana/web3.js";
-import {test_init, TestSessions} from "../src";
-import {Stake as SolStatke, TransactionSession as SolTransaction, TokenManagement as SolToken} from "@uni-wc/session-solana";
-import process from "node:process";
-import {CHAINS} from "@uni-wc/chains";
+import {Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram} from "@solana/web3.js";
+import {config_from_env, test_init, TestSessions} from "../src";
+import {Stake as SolStatke, TransactionSession as SolTransaction } from "@uni-wc/session-solana";
 
-
-dotenv.config({
-	path: "../../.env"
-});
-
-for (const envKey in process.env) {
-	const chainId = envKey.replace("_", ":");
-	const chain = CHAINS.get(chainId);
-	if (chain) {
-		console.log("using custom RPC ", process.env[envKey]);
-		chain.vchain.rpcUrls["custom"] = {
-			http: process.env[envKey]!.split(","),
-		};
-	}
-}
-
+config_from_env();
 
 let sessions: TestSessions;
 let solStaker: SolStatke;
 let solTransaction: SolTransaction;
 
-
 beforeAll(async () => {
-	try {
-
-		sessions = await test_init();
-		solStaker = await SolStatke.init(sessions.solSession, sessions.ctx);
-		solTransaction = new SolTransaction(sessions.solSession);
-	} catch (e) {
-		console.error(e);
-	}
+	sessions = await test_init();
+	solStaker = await SolStatke.init(sessions.solSession, sessions.ctx);
+	solTransaction = new SolTransaction(sessions.solSession);
 }, 30000);
 
 afterAll(async () => {
@@ -52,7 +28,8 @@ describe('solana-sign', () => {
 	test('message', async () => {
 		const solSession = sessions.solSession;
 		expect(solSession).toBeDefined();
-		await solSession!.signMessage(new Date().toDateString());
+		const sig = await solSession!.signMessage(new Date().toDateString());
+		expect(sig).toBeDefined();
 	})
 
 	test('transaction', async () => {
@@ -63,7 +40,7 @@ describe('solana-sign', () => {
 			fromPubkey: solSession.account,
 			toPubkey: to,
 		})
-		const tx = await solSession.signTransaction([instruction]);
+		const tx = await solSession.signTransactionFees([instruction]);
 		expect(tx.verifySignatures(true)).toBeTruthy();
 	});
 

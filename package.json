@@ -11,8 +11,8 @@
     "dev:webapp": "pnpm -F webapp run dev",
     "test:libs": "pnpm -r --filter ./packages run test",
     "test:integration": "pnpm build:pack && pnpm -r --filter ./packages/integration/ run test:integration",
-      "clean": "pnpm -r run clean",
-      "distclean": "pnpm clean; rm -rf node_modules packages/*/node_modules packages/*/*/node_modules apps/*/node_modules"
+    "clean": "pnpm -r run clean",
+    "distclean": "pnpm clean; rm -rf node_modules packages/*/node_modules packages/*/*/node_modules apps/*/node_modules"
   },
   "dependencies": {
     "@fireblocks/ts-sdk": "^2.1.0",
@@ -43,12 +43,11 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "unstorage": "^1.10.2",
-    "viem": "~2.14",
+    "viem": "~2.14.2",
     "wagmi": "^2.10.2",
     "xdg-basedir": "^5.1.0"
   },
   "devDependencies": {
-    "@walletconnect/types": "^2.13.3",
     "@babel/cli": "^7.24.7",
     "@babel/core": "^7.24.7",
     "@babel/preset-env": "^7.24.7",
@@ -57,6 +56,7 @@
     "@types/node": "^20.14.2",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
+    "@walletconnect/types": "^2.13.3",
     "babel-jest": "^29.7.0",
     "babel-plugin-add-import-extension": "^1.6.0",
     "eslint": "^8.57.0",
@@ -65,7 +65,7 @@
     "jest-mock-extended": "^3.0.7",
     "postcss": "^8.4.38",
     "tailwindcss": "^3.4.4",
-    "ts-jest": "^29.1.4",
+    "ts-jest": "^29.1.5",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.5"
   },

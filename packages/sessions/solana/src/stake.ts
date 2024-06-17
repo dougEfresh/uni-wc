@@ -11,7 +11,7 @@ import {Buffer} from "buffer";
 import {type IContext, type ISolanaSession} from "@uni-wc/provider";
 import {type Logger} from '@walletconnect/logger';
 
-interface Account {
+interface StakeAccount {
 	pubkey: PublicKey;
 	account: AccountInfo<Buffer | ParsedAccountData>;
 	status: StakeActivationData;
@@ -30,8 +30,8 @@ export class AccountNotFound extends Error {
 }
 
 export interface IStake {
-	stakedAccounts(): Array<Account>
-	
+	stakedAccounts(): Array<StakeAccount>
+
 	stake(lamports: number, signer: Signer | undefined): Promise<string>;
 
 	deactivate(stakeAccount: PublicKey): Promise<string>;
@@ -47,15 +47,9 @@ export class Stake implements IStake {
 	session: ISolanaSession;
 	readonly logger: Logger;
 	readonly dryRun: boolean;
-	private _stakedAccounts: Array<{
-		pubkey: PublicKey;
-		account: AccountInfo<Buffer | ParsedAccountData>;
-	}>;
+	private _stakedAccounts: Array<StakeAccount>;
 
-	private constructor(session: ISolanaSession, stakedAccounts: Array<{
-		pubkey: PublicKey;
-		account: AccountInfo<Buffer | ParsedAccountData>;
-	}>, ctx: IContext) {
+	private constructor(ctx: IContext, session: ISolanaSession, stakedAccounts: Array<StakeAccount>) {
 		this.session = session;
 		this._stakedAccounts = stakedAccounts
 		this.dryRun = ctx.dryRun;
@@ -76,12 +70,19 @@ export class Stake implements IStake {
 				],
 			},
 		);
+		const statkeAccounts : StakeAccount[] = [];
+		for (const a of accounts) {
+			statkeAccounts.push({
+				pubkey: a.pubkey,
+				account: a.account,
+				status: await session.connection.getStakeActivation(a.pubkey)
+			})
+		}
 		ctx.logger.debug(`Got ${accounts.length} staked accounts`);
-		const b = await session.connection.getStakeActivation(accounts[0].pubkey);
-		return new Stake(session, accounts, ctx);
+		return new Stake(ctx, session, statkeAccounts);
 	}
 
-	stakedAccounts(): Array<{ pubkey: PublicKey; account: AccountInfo<Buffer | ParsedAccountData>}> {
+	stakedAccounts(): Array<StakeAccount> {
 		return this._stakedAccounts;
 	}
 
@@ -109,7 +110,8 @@ export class Stake implements IStake {
 			try {
 				const a = await this.session.connection.getAccountInfo(acct.publicKey, "confirmed");
 				if (a) {
-					this._stakedAccounts.push({pubkey: acct.publicKey, account: a});
+					const status = await this.session.connection.getStakeActivation(acct.publicKey);
+					this._stakedAccounts.push({pubkey: acct.publicKey, account: a, status});
 					return sig;
 				}
 			} catch (e) {

@@ -27,19 +27,22 @@ export class CircleBridge  {
 	}
 
 	public async bridgeFromSolana(from: ISolanaSession, to: IEipSession,  amt: bigint): Promise<string[]> {
+		const id: string[]  = [];
 		const solSigner = new SolanaWormholeSigner(this.ctx, from);
 		const eipSigner = new EipWormholeSigner(this.ctx, to);
 		const toAddress = Wormhole.chainAddress('BaseSepolia', to.account);
 		const sender = Wormhole.chainAddress('Solana', from.account.toString());
-
 		const xfer = await this.wh.circleTransfer(amt, sender, toAddress, false);
 		const srcTxids = await xfer.initiateTransfer(solSigner);
+		id.push(...srcTxids);
 		const timeout = 60 * 1000;
 		this.logger.info("Checking circle attestation");
 		const attestIds = await xfer.fetchAttestation(timeout);
+		id.push(...attestIds);
 		this.logger.info(`Got Attestation: ${JSON.stringify(attestIds)}`);
 		const destTx = await xfer.completeTransfer(eipSigner);
+		id.push(...destTx);
 		this.logger.info(`Destination chain sigs ${JSON.stringify(destTx)}`);
-		return srcTxids;
+		return id;
 	}
 }

@@ -1,9 +1,29 @@
 import pino from "pino";
 import {Fireblocks, type Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
-import {baseSepolia, NAMESPACE_TEST, sepolia} from "@uni-wc/chains";
+import {baseSepolia, CHAINS, NAMESPACE_TEST, sepolia} from "@uni-wc/chains";
 import {UniversalProviderFactory, type ISolanaSession, type IEipSession, type IContext} from "@uni-wc/provider";
 import UniversalProvider from "@walletconnect/universal-provider";
+import dotenv from "dotenv";
 
+export function config_from_env() {
+
+	dotenv.config({
+		path: "../../.env"
+	});
+
+	for (const envKey in process.env) {
+		const chainId = envKey.replace("_", ":");
+		const chain = CHAINS.get(chainId);
+		if (chain) {
+			console.log("using custom RPC ", process.env[envKey]);
+			chain.vchain.rpcUrls["custom"] = {
+				http: process.env[envKey]!.split(","),
+			};
+		}
+	}
+
+
+}
 
 export interface TestSessions {
 	provider: UniversalProvider;
@@ -37,8 +57,7 @@ export async function test_init(): Promise<TestSessions> {
 		dryRun: false,
 		client: undefined,
 		disableProviderPing: true,
-		logger: undefined,
-		log: logger,
+		logger: logger,
 		metadata: {
 			name: "uni-walletconnect",
 			description: "just use walletconnect",
