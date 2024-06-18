@@ -27,4 +27,11 @@ describe('circle-cctp', () => {
 		sessions.ctx.logger.info(`got back ${JSON.stringify(sigs)}`)
 		expect(sigs.length).toEqual(3);
 	});
+
+	test('polygon-base', async () => {
+		const eipSession = sessions.sepoliaSession;
+		const sigs = await circle.bridgeEvm(eipSession, sessions.baseSepoliaSession , BigInt(1));
+		expect(sigs).toBeDefined();
+		expect(sigs.length).toEqual(3);
+	});
 });

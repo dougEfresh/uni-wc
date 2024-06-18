@@ -80,13 +80,13 @@ export async function displayMenu(): Promise<void> {
 			await provider.disconnect();
 			break;
 		case 'evmchains':
-			const evmchain = await select({
-				choices: evmchains, default: "solana", loop: false,
+			const evmchain: string = await select({
+				choices: evmchains,
+				loop: true,
 				message: "Which Chain?",
 				theme: undefined
-
 			});
-			const chain  = chainById(answer);
+			const chain  = chainById(evmchain);
 			if (!chain) {
 				console.log('Invalid choice', answer);
 				break;
@@ -159,6 +159,11 @@ async function handle_eip_chain(session: IEipSession) {
 			message: 'Choose your path',
 			choices: [
 				{
+					name: "Info",
+					value: "info",
+					description: "",
+				},
+				{
 					name: "Sign Message",
 					value: "message",
 					description: "",
@@ -172,21 +177,26 @@ async function handle_eip_chain(session: IEipSession) {
 		});
 
 		switch(answer) {
-		case'message':
-			try {
-				const sig = await session.wc.signMessage({
-					account: session.account as Address,
-					message: 'yo, sup.'
-				});
-				console.log("Sig " , sig);
-			} catch(e) {
-				console.error(e);
-			}
-			break
-		case 'back':
-			return
-		default:
-			return
+			case'message':
+				try {
+					const sig = await session.wc.signMessage({
+						account: session.account as Address,
+						message: 'yo, sup.'
+					});
+					console.log("Sig " , sig);
+				} catch(e) {
+					console.error(e);
+				}
+				break
+			case 'info':
+				console.log(`Account ${session.account}`)
+				const balance = await session.pc.getBalance({address: session.account});
+				console.log(`Balance ${balance}`);
+				break;
+			case 'back':
+				return
+			default:
+				return
 		}
 	}
 }
