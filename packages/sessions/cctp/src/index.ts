@@ -1,1 +1,1 @@
-export { CircleBridge } from './cctp';
+export { CircleBridge, createBridgeSession } from './cctp';
