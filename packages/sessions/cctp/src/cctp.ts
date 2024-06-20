@@ -1,5 +1,13 @@
 import {
-	Chain, ChainAddress, CircleTransfer, network, SignAndSendSigner, TransactionId, Wormhole,
+	Chain,
+	ChainAddress,
+	CircleMessageId,
+	CircleTransfer,
+	CircleTransferDetails,
+	network,
+	SignAndSendSigner,
+	TransactionId,
+	Wormhole,
 } from '@wormhole-foundation/sdk-connect';
 import {EipSession, IContext, IEipSession, ISolanaSession, SolanaSession} from "@uni-wc/provider";
 
@@ -11,6 +19,7 @@ import {Logger} from "pino";
 import {EipWormholeSigner, SolanaWormholeSigner} from "./signers";
 
 import {solana  as cSolana, solanadev as cSolanadev , baseSepolia , sepolia} from '@uni-wc/chains';
+
 
 
 export function createBridgeSession(ctx: IContext, session: IEipSession | ISolanaSession): BridgeSession<any> {
@@ -74,15 +83,14 @@ export class CircleBridge  {
 		return new CircleBridge(ctx,  wh);
 	}
 
-	public async burn(from: BridgeSession<any>, dest: BridgeSession<any>,  amt: bigint): Promise<{ xfer: CircleTransfer<any>, id: string}> {
+	public async burn(from: BridgeSession<any>, dest: BridgeSession<any>,  amt: bigint): Promise<CircleTransfer<any>> {
 		const fromSigner = from.signer;
 		const xfer = await this.wh.circleTransfer(amt, from.address, dest.address, false);
 		const ids =  await xfer.initiateTransfer(fromSigner);
-
 		if (ids.length == 0) {
 			throw new Error("Did not get back transaction hash for burn contract call");
 		}
-		return {xfer, id: ids[0]};
+		return xfer
 	}
 
 	public async completeXfer<C extends Chain>(xfer: CircleTransfer<any>, dest: BridgeSession<C>): Promise<string[]> {
@@ -96,21 +104,24 @@ export class CircleBridge  {
 
 	public async completeTransfer<C extends Chain>(txid: TransactionId, dest: BridgeSession<C>): Promise<string[]> {
 		const ids: string[] = [];
-
-		const xfer = await CircleTransfer.from(this.wh, txid);
-		const attestIds = await xfer.fetchAttestation(60 * 1000);
-		ids.push(...attestIds);
+		const fromChain = this.wh.getChain(txid.chain);
+		const cb = await fromChain.getCircleBridge();
+		const message = await cb.parseTransactionDetails(txid.txid);
+		const details: CircleTransferDetails = {
+			...message,
+			to: dest.address,
+			automatic: false
+		}
+		// @ts-ignore
+		const xfer = await CircleTransfer.from(this.wh, message.id, 60_000, fromChain, this.wh.getChain(dest.address.chain));
 		const dstTxIds = await xfer.completeTransfer(dest.signer);
 		ids.push(...dstTxIds);
 		return ids;
 	}
 
 	public async bridge(from: BridgeSession<any>, dest: BridgeSession<any>,  amt: bigint): Promise<string[]> {
-		const {
-			xfer,
-			id
-		} = await this.burn(from, dest, amt);
-		const ids : string[] = [id];
+		const xfer = await this.burn(from, dest, amt);
+		const ids : string[] = xfer.txids.map((t) => t.txid);
 		const sigs = await this.completeXfer(xfer, dest);
 		ids.push(...sigs);
 		return ids;

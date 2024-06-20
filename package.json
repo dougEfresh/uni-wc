@@ -6,6 +6,7 @@
   "scripts": {
     "build:all": "pnpm -r run build",
     "cli": "pnpm build:pack && pnpm -F cli run cli",
+    "build": "pnpm build:pack && pnpm build:types",
     "build:pack": "pnpm -r --filter './packages/**' run build",
     "build:types": "pnpm -r --filter './packages/**' run build:types",
     "dev:webapp": "pnpm -F webapp run dev",

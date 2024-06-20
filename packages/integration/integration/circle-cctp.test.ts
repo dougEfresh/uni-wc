@@ -2,7 +2,6 @@ import {beforeAll, expect} from "@jest/globals";
 import {config_from_env, test_init, TestSessions} from "../src";
 import {CircleBridge, createBridgeSession} from "@uni-wc/session-cctp";
 import {UniversalProviderFactory} from "@uni-wc/provider";
-import exp = require("node:constants");
 config_from_env();
 let sessions: TestSessions;
 let circle: CircleBridge;
@@ -36,16 +35,12 @@ describe('circle-cctp', () => {
 		const eipSession = sessions.baseSepoliaSession;
 		const eipBridge = createBridgeSession(sessions.ctx, eipSession);
 		const solanaBridge = createBridgeSession(sessions.ctx, sessions.solSession);
-		const {
-			xfer,
-			id
-		} = await circle.burn(solanaBridge, eipBridge, BigInt(1));
-		expect(id).toBeDefined();
-		console.log(JSON.stringify(Object.keys(xfer)));
-
+		const xfer = await circle.burn(solanaBridge, eipBridge, BigInt(1));
+		expect(xfer).toBeDefined();
+		expect(xfer.txids.length).toBeGreaterThan(0);
 		const hash = await sessions.solSession.connection.getLatestBlockhash();
 		const status = await sessions.solSession.connection.confirmTransaction({
-			signature: id,
+			signature: xfer.txids[0].txid,
 			blockhash: hash.blockhash,
 			lastValidBlockHeight: hash.lastValidBlockHeight
 		}, "finalized");
@@ -56,17 +51,4 @@ describe('circle-cctp', () => {
 		expect(sigs.length).toEqual(2);
 	});
 
-	/*
-	test('evm-evm', async () => {
-		const sigs = await circle.bridgeEvm(sessions.baseSepoliaSession , sessions.sepoliaSession, BigInt(1));
-		expect(sigs).toBeDefined();
-		expect(sigs.length).toEqual(3);
-	});
-
-	test('evm-evm', async () => {
-		const sigs = await circle.bridgeEvm(sessions.baseSepoliaSession , sessions.sepoliaSession, BigInt(1));
-		expect(sigs).toBeDefined();
-		expect(sigs.length).toEqual(3);
-	});
-	 */
 });
