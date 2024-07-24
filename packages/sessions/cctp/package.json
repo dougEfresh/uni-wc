@@ -27,7 +27,8 @@
     "@wormhole-foundation/sdk-evm": "*",
     "@wormhole-foundation/sdk-definitions": "*",
     "@wormhole-foundation/sdk-solana": "*",
-    "@wormhole-foundation/sdk-connect": "*"
+    "@wormhole-foundation/sdk-connect": "*",
+    "@wormhole-foundation/sdk-solana-cctp": "*"
   },
   "devDependencies": {
     "@walletconnect/universal-provider": "*",

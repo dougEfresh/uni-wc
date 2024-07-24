@@ -3,7 +3,7 @@ import {
 	ChainAddress,
 	CircleMessageId,
 	CircleTransfer,
-	CircleTransferDetails,
+	CircleTransferDetails, isCircleMessageId,
 	network,
 	SignAndSendSigner,
 	TransactionId,
@@ -73,13 +73,14 @@ export class CircleBridge  {
 	}
 
 	public static async init (ctx: IContext,  net: network.Network) {
-		const wh = await wormhole(net, [evm, solana, cosmwasm], {
+		const cfg = {
 			chains: {
 				Solana: {
-					rpc: "https://devnet.helius-rpc.com/?api-key=4cea6a19-c670-44a2-b41b-1d20193e62b0"
+					rpc: ""
 				}
 			}
-		});
+		}
+		const wh = await wormhole(net, [evm, solana, cosmwasm]);
 		return new CircleBridge(ctx,  wh);
 	}
 
@@ -107,13 +108,10 @@ export class CircleBridge  {
 		const fromChain = this.wh.getChain(txid.chain);
 		const cb = await fromChain.getCircleBridge();
 		const message = await cb.parseTransactionDetails(txid.txid);
-		const details: CircleTransferDetails = {
-			...message,
-			to: dest.address,
-			automatic: false
-		}
+		console.log("hash ", message.id.hash, message.id.hash.startsWith("0x"));
+
 		// @ts-ignore
-		const xfer = await CircleTransfer.from(this.wh, message.id, 60_000, fromChain, this.wh.getChain(dest.address.chain));
+		const xfer = await CircleTransfer.from(this.wh,  message.id, 60_000, fromChain, this.wh.getChain(dest.address.chain));
 		const dstTxIds = await xfer.completeTransfer(dest.signer);
 		ids.push(...dstTxIds);
 		return ids;

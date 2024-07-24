@@ -193,6 +193,10 @@ function sleep(ms: number): Promise<void> {
 describe('evm', () => {
 	test('usdc', async () => {
 		const pc = sessions.baseSepoliaSession.pc;
+		const balance = await pc.getBalance({
+			address: sessions.baseSepoliaSession.account,
+		});
+		console.log(`balance ${balance}`);
 		const wc = sessions.baseSepoliaSession.wc;
 		await wc.switchChain({
 			id: sessions.baseSepoliaSession.chain.vchain.id
@@ -215,6 +219,7 @@ describe('evm', () => {
 		const status = await pc.getTransaction({
 			hash: hash,
 		});
+
 		expect(status).toBeDefined();
 	});
 
