@@ -1,7 +1,7 @@
 import {beforeAll, expect} from "@jest/globals";
 import {config_from_env, test_init, TestSessions} from "../src";
 import {UniversalProviderFactory} from "@uni-wc/provider";
-import {Address, getContract, parseUnits} from "viem";
+import {Address, formatTransaction, getContract, parseEther, parseGwei, parseUnits} from "viem";
 
 config_from_env();
 let sessions: TestSessions;
@@ -191,6 +191,31 @@ function sleep(ms: number): Promise<void> {
 }
 
 describe('evm', () => {
+
+	test('transfer', async () => {
+		const session = sessions.baseSepoliaSession;
+		const pc = session.pc;
+		const balance = await pc.getBalance({
+			address: session.account,
+		});
+		await session.wc.switchChain({ id: session.chain.vchain.id});
+		console.log(`balance ${balance}`);
+		const request = await session.wc.prepareTransactionRequest({
+			account: session.account,
+			to: '0x3d69528383409EA07A8d68a9777cEaFC574D84b4',
+			value: parseEther('0.000001'),
+			chain: session.chain.vchain,
+			//maxFeePerGas: parseGwei('10'),
+			//maxPriorityFeePerGas: parseGwei('0.01'),
+		});
+		const tx = {
+			account: session.account,
+			...request
+		};
+		const serializedTransaction = await session.wc.sendTransaction(tx);
+		console.log(serializedTransaction);
+	});
+
 	test('usdc', async () => {
 		const pc = sessions.baseSepoliaSession.pc;
 		const balance = await pc.getBalance({

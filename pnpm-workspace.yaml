@@ -1,5 +1,6 @@
 packages:
   - "packages/*"
   - "apps/cli"
+  - "apps/cctp"
   - "packages/sessions/*"
 

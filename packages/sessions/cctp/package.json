@@ -22,13 +22,10 @@
     "@solana/web3.js": "*",
     "viem": "*",
     "@walletconnect/logger": "*",
-    "@wormhole-foundation/sdk-base": "*",
     "@wormhole-foundation/sdk": "*",
-    "@wormhole-foundation/sdk-evm": "*",
     "@wormhole-foundation/sdk-definitions": "*",
     "@wormhole-foundation/sdk-solana": "*",
-    "@wormhole-foundation/sdk-connect": "*",
-    "@wormhole-foundation/sdk-solana-cctp": "*"
+    "@wormhole-foundation/sdk-evm": "*"
   },
   "devDependencies": {
     "@walletconnect/universal-provider": "*",

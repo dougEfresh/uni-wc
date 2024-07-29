@@ -29,7 +29,6 @@
     "@uni-wc/session-solana": "workspace:*",
     "@uni-wc/provider": "workspace:*",
     "@uni-wc/session-cctp": "workspace:*",
-    "@wormhole-foundation/sdk-connect": "*",
     "qrcode-terminal": "*",
     "@babel/preset-env": "*",
     "babel-jest": "*",

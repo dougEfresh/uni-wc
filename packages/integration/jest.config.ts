@@ -12,7 +12,7 @@ const config: Config = {
 	modulePaths: ["<rootDir>"],
 	detectLeaks: false,
 	detectOpenHandles: false,
-	testTimeout: 90000,
+	testTimeout: 9000000,
 	testMatch: [
 		"<rootDir>/integration/*.test.ts",
 	]

@@ -27,7 +27,7 @@
     "@uni-wc/provider": "workspace:*",
     "@walletconnect/keyvaluestorage": "*",
     "@walletconnect/universal-provider": "*",
-    "@walletconnect/sign-client": "^2",
+    "@walletconnect/sign-client": "*",
     "bs58": "*",
     "commander": "*",
     "dotenv": "*",

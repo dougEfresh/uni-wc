@@ -1,9 +1,10 @@
 import pino from "pino";
 import {Fireblocks, type Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
-import {baseSepolia, CHAINS, NAMESPACE_TEST, polygonAmoy, sepolia} from "@uni-wc/chains";
+import {baseSepolia, CHAINS, NAMESPACE_TEST, polygonAmoy, sepolia, optimismSepolia} from "@uni-wc/chains";
 import {UniversalProviderFactory, type ISolanaSession, type IEipSession, type IContext} from "@uni-wc/provider";
 import UniversalProvider from "@walletconnect/universal-provider";
 import dotenv from "dotenv";
+
 
 export function config_from_env() {
 
@@ -31,6 +32,7 @@ export interface TestSessions {
 	sepoliaSession: IEipSession;
 	baseSepoliaSession: IEipSession;
 	polygonSepoliaSession: IEipSession;
+	opSepoliaSession: IEipSession;
 	ctx: IContext;
 }
 
@@ -117,8 +119,13 @@ export async function test_init(): Promise<TestSessions> {
 	if (!_polygonSepolia) {
 		throw new Error("no polygon session found");
 	}
+	const _opSepolia = sessions!.eip(optimismSepolia.id);
+	if (!_opSepolia) {
+		throw new Error("no opSepolia session found");
+	}
 	const sepoliaSession = _sepolia!;
 	const baseSepoliaSession = _baseSepolia;
+	const opSepoliaSession = _opSepolia;
 	const s = sessions.solana();
 	if (!s) {
 		throw new Error("no solana session found");
@@ -129,6 +136,7 @@ export async function test_init(): Promise<TestSessions> {
 		solSession,
 		sepoliaSession,
 		baseSepoliaSession,
+		opSepoliaSession,
 		polygonSepoliaSession: _polygonSepolia,
 		ctx: {
 			dryRun: false,

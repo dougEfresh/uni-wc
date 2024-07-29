@@ -1,25 +1,23 @@
 import {
 	Chain,
 	ChainAddress,
-	CircleMessageId,
 	CircleTransfer,
-	CircleTransferDetails, isCircleMessageId,
 	network,
 	SignAndSendSigner,
 	TransactionId,
+	TransferState,
 	Wormhole,
-} from '@wormhole-foundation/sdk-connect';
+	wormhole,
+} from '@wormhole-foundation/sdk';
 import {EipSession, IContext, IEipSession, ISolanaSession, SolanaSession} from "@uni-wc/provider";
 
 import evm from "@wormhole-foundation/sdk/evm";
 import solana from "@wormhole-foundation/sdk/solana";
 import cosmwasm from "@wormhole-foundation/sdk/cosmwasm";
-import {wormhole} from "@wormhole-foundation/sdk";
 import {Logger} from "pino";
 import {EipWormholeSigner, SolanaWormholeSigner} from "./signers";
 
-import {solana  as cSolana, solanadev as cSolanadev , baseSepolia , sepolia} from '@uni-wc/chains';
-
+import {baseSepolia, optimismSepolia, sepolia, solana as cSolana, solanadev as cSolanadev} from '@uni-wc/chains';
 
 
 export function createBridgeSession(ctx: IContext, session: IEipSession | ISolanaSession): BridgeSession<any> {
@@ -41,7 +39,7 @@ export function createBridgeSession(ctx: IContext, session: IEipSession | ISolan
 	throw new Error(`Unknown session ${typeof session}`)
 }
 
-const chainToWormhole =  (k: string): Chain => {
+export const chainToWormhole =  (k: string): Chain => {
 	switch (k) {
 		case cSolana.id:
 			return 'Solana'
@@ -51,6 +49,8 @@ const chainToWormhole =  (k: string): Chain => {
 			return 'BaseSepolia';
 		case sepolia.id:
 			return 'Sepolia';
+		case optimismSepolia.id:
+			return 'OptimismSepolia'
 		default:
 			throw new Error(`unable to lookup chain  from id ${k}`);
 	}
@@ -73,76 +73,29 @@ export class CircleBridge  {
 	}
 
 	public static async init (ctx: IContext,  net: network.Network) {
-		const cfg = {
-			chains: {
-				Solana: {
-					rpc: ""
-				}
-			}
-		}
 		const wh = await wormhole(net, [evm, solana, cosmwasm]);
 		return new CircleBridge(ctx,  wh);
 	}
 
-	public async burn(from: BridgeSession<any>, dest: BridgeSession<any>,  amt: bigint): Promise<CircleTransfer<any>> {
-		const fromSigner = from.signer;
-		const xfer = await this.wh.circleTransfer(amt, from.address, dest.address, false);
-		const ids =  await xfer.initiateTransfer(fromSigner);
-		if (ids.length == 0) {
-			throw new Error("Did not get back transaction hash for burn contract call");
-		}
-		return xfer
-	}
-
-	public async completeXfer<C extends Chain>(xfer: CircleTransfer<any>, dest: BridgeSession<C>): Promise<string[]> {
-		const ids: string[] = [];
-		const attestIds = await xfer.fetchAttestation(60 * 1000);
-		ids.push(...attestIds);
-		const dstTxIds = await xfer.completeTransfer(dest.signer);
-		ids.push(...dstTxIds);
-		return ids;
-	}
 
 	public async completeTransfer<C extends Chain>(txid: TransactionId, dest: BridgeSession<C>): Promise<string[]> {
-		const ids: string[] = [];
-		const fromChain = this.wh.getChain(txid.chain);
-		const cb = await fromChain.getCircleBridge();
-		const message = await cb.parseTransactionDetails(txid.txid);
-		console.log("hash ", message.id.hash, message.id.hash.startsWith("0x"));
-
-		// @ts-ignore
-		const xfer = await CircleTransfer.from(this.wh,  message.id, 60_000, fromChain, this.wh.getChain(dest.address.chain));
-		const dstTxIds = await xfer.completeTransfer(dest.signer);
-		ids.push(...dstTxIds);
-		return ids;
+		const xfer = await CircleTransfer.from(this.wh, txid );
+		if (xfer.getTransferState() == TransferState.DestinationFinalized) {
+			return [];
+		}
+		const ids = await xfer.fetchAttestation(60 * 1000);
+		this.logger.info(`got back attestation ids ${ids}`);
+		return xfer.completeTransfer(dest.signer);
 	}
 
 	public async bridge(from: BridgeSession<any>, dest: BridgeSession<any>,  amt: bigint): Promise<string[]> {
-		const xfer = await this.burn(from, dest, amt);
-		const ids : string[] = xfer.txids.map((t) => t.txid);
-		const sigs = await this.completeXfer(xfer, dest);
-		ids.push(...sigs);
+		const fromSigner = from.signer;
+		const xfer = await this.wh.circleTransfer(amt, from.address, dest.address, false);
+		const ids =  await xfer.initiateTransfer(fromSigner);
+		const attestIds = await xfer.fetchAttestation(60 * 1000);
+		const destIds = await xfer.completeTransfer(dest.signer);
+		ids.push(...attestIds);
+		ids.push(...destIds);
 		return ids;
-	}
-
-	public async bridgeFromSolana(from: ISolanaSession, to: IEipSession,  amt: bigint): Promise<string[]> {
-		const destChain = chainToWormhole(to.chain.id);
-		const id: string[]  = [];
-		const solSigner = new SolanaWormholeSigner(this.ctx, from);
-		const eipSigner = new EipWormholeSigner(this.ctx, to);
-		const toAddress = Wormhole.chainAddress(destChain, to.account);
-		const sender = Wormhole.chainAddress('Solana', from.account.toString());
-		const xfer = await this.wh.circleTransfer(amt, sender, toAddress, false);
-		const srcTxids = await xfer.initiateTransfer(solSigner);
-		id.push(...srcTxids);
-		const timeout = 60 * 1000;
-		this.logger.info("Checking circle attestation");
-		const attestIds = await xfer.fetchAttestation(timeout);
-		id.push(...attestIds);
-		this.logger.info(`Got Attestation: ${JSON.stringify(attestIds)}`);
-		const destTx = await xfer.completeTransfer(eipSigner);
-		id.push(...destTx);
-		this.logger.info(`Destination chain sigs ${JSON.stringify(destTx)}`);
-		return id;
 	}
 }
