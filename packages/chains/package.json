@@ -17,10 +17,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "viem": "*"
+    "viem": "^2.18.5"
   },
   "devDependencies": {
     "@babel/preset-env": "*",
+    "@babel/preset-typescript": "*",
     "@babel/core": "*",
     "@babel/cli": "*",
     "babel-jest": "*",

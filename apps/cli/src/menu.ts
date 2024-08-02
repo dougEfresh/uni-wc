@@ -2,8 +2,9 @@ import {input, select, Separator} from '@inquirer/prompts';
 import UniversalProvider from "@walletconnect/universal-provider";
 import {type IEipSession, type ISessionFactory, UniversalProviderFactory} from "@uni-wc/provider";
 import {chainById, cosmos, solana, solanadev} from "@uni-wc/chains";
-import {type Address} from "viem";
+import {type Address, parseEther} from "viem";
 import {handle_solana} from "./solana";
+import {LAMPORTS_PER_SOL, PublicKey} from "@solana/web3.js";
 
 
 export async function displayMenu(): Promise<void> {
@@ -164,6 +165,11 @@ async function handle_eip_chain(session: IEipSession) {
 					description: "",
 				},
 				{
+					name: "Transfer",
+					value: "transfer",
+					description: "",
+				},
+				{
 					name: "Sign Message",
 					value: "message",
 					description: "",
@@ -177,7 +183,33 @@ async function handle_eip_chain(session: IEipSession) {
 		});
 
 		switch(answer) {
-			case'message':
+			case 'transfer':
+				const answer = await input({
+					message: "How much you want to stake in ETH units?"
+				});
+				const eth = parseEther(answer);
+				const whom = await input({
+					message: "To whom?"
+				});
+				try {
+					await session.wc.switchChain({id: session.chain.vchain.id});
+					const request = await session.wc.prepareTransactionRequest({
+						account: session.account,
+						to: whom as Address,
+						value: eth,
+						chain: session.chain.vchain,
+					});
+					const tx = {
+						account: session.account,
+						...request
+					};
+					const serializedTransaction = await session.wc.sendTransaction(tx);
+					console.log(serializedTransaction);
+				} catch (e) {
+				console.error(e);
+				}
+				break
+			case 'message':
 				try {
 					const sig = await session.wc.signMessage({
 						account: session.account as Address,

@@ -1,5 +1,5 @@
 import { solana, solanadev } from './solana'
-import {MAIN_CHAINS, TEST_CHAINS} from "./chains";
+import {DEVX_CHAINS, MAIN_CHAINS, SANDBOX_CHAINS} from "./chains";
 import {cosmos} from "./cosmos";
 
 
@@ -13,6 +13,24 @@ interface NamespaceConfig {
 	[namespace: string]: BaseRequiredNamespace;
 }
 
+export const NAMESPACE_DEVX: NamespaceConfig = {
+	"solana": {
+		chains: [solanadev.id],
+		methods: ["solana_signMessage", "solana_signTransaction"],
+		events: [],
+	},
+	"eip155": {
+		chains: DEVX_CHAINS.filter((c) => c.namespace === "eip155").map((c) => c.id),
+		methods: [
+			'eth_sendTransaction',
+			'eth_signTransaction',
+			'eth_sign',
+			'personal_sign',
+			'eth_signTypedData'
+		],
+		events: []
+	}
+}
 
 export const NAMESPACE_TEST: NamespaceConfig = {
 	"cosmos": {
@@ -21,12 +39,12 @@ export const NAMESPACE_TEST: NamespaceConfig = {
 		events:[],
 	},
 	"solana": {
-	chains: [solanadev.id],
+		chains: [solanadev.id],
 		methods: ["solana_signMessage", "solana_signTransaction"],
 		events: [],
-},
+	},
 	"eip155": {
-		chains: TEST_CHAINS.filter((c) => c.namespace === "eip155").map((c) => c.id),
+		chains: SANDBOX_CHAINS.filter((c) => c.namespace === "eip155").map((c) => c.id),
 		methods: [
 			'eth_sendTransaction',
 			'eth_signTransaction',

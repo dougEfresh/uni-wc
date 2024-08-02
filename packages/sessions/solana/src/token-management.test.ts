@@ -31,7 +31,7 @@ beforeEach(() => {
 
 describe('solana-token-manager', () => {
 	test('transfer-no-account', async () => {
-			const tokenManager =  new TokenManagement(ctx, mockSession, undefined);
+			const tokenManager =  new TokenManagement(ctx, mockSession);
 			const to: PublicKey = new PublicKey("E4SfgGV2v9GLYsEkCQhrrnFbBcYmAiUZZbJ7swKGzZHJ");
 			const usdc = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 			const tokens = await tokenManager.tokens();

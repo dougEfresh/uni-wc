@@ -1,5 +1,5 @@
 import {UniversalProviderFactory} from "@uni-wc/provider";
-import {NAMESPACE_MAIN, NAMESPACE_TEST} from "@uni-wc/chains";
+import {NAMESPACE_MAIN, NAMESPACE_TEST, NAMESPACE_DEVX} from "@uni-wc/chains";
 import UniversalProvider from "@walletconnect/universal-provider";
 import {type SessionTypes} from "@walletconnect/types";
 import {xdgData} from 'xdg-basedir';
@@ -8,16 +8,18 @@ import {program} from 'commander';
 import {Fireblocks, type Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
 import {displayMenu, withTimeout} from "./menu";
 import pino from 'pino';
+import clipboardy from 'clipboardy';
 
 
 const dbPath = `${xdgData}/uni-wc`;
 
 async function handle_session_proposal(uri: string, fireblocksVaultId: number) {
+	clipboardy.writeSync(uri);
 		qr.generate(uri, {small: true}, (qrcode: any) => {
 			console.info('Scan the QR code below with your wallet:');
 			console.log(qrcode);
 		});
-		console.log('display_uri', uri);
+		console.log(uri);
 		if (fireblocksVaultId >= 0) {
 			const fb = new Fireblocks();
 			const web3 = await fb.web3Connections.create(<Web3ConnectionsApiCreateRequest>{
@@ -39,6 +41,7 @@ export async function main()
 	const options = program.opts();
 	const fireblocksVaultId: number = options.fireblocks;
 	const useTestnet: boolean = options.testnet || false;
+	const useDevnet: boolean = options.devnet || false;
 	const lvl: string = options.logLevel;
 	const dryRun: boolean = options.dryRun;
 
@@ -69,11 +72,19 @@ export async function main()
 		}
 	});
 
-	logger.info("Created logger");
+	let dbLocation = dbPath;
+	if (useTestnet) {
+		dbLocation = `${dbPath}/testnet`
+	}
+	if (useDevnet) {
+		dbLocation = `${dbPath}/devNet`
+	}
+	console.log(dbLocation);
+	logger.info(`using ${dbLocation}`)
 	const opts  = {
 		dryRun: dryRun,
 		client: undefined,
-		disableProviderPing: false,
+		disableProviderPing: true,
 		logger: logger,
 		metadata: {
 			name: "uni-walletconnect",
@@ -86,7 +97,7 @@ export async function main()
 		projectId: "80a11e83ad1dfde39aff286eb6d74554",
 		storage: undefined,
 		storageOptions: {
-			database: dbPath,
+			database: dbLocation
 		},
 		sessionProposalCallback: async (uri: string) => {await handle_session_proposal(uri, fireblocksVaultId)}
 	};
@@ -107,24 +118,40 @@ export async function main()
 		logger.info("subscription_created", JSON.stringify(obj));
 	});
 
-	await provider.connect({
-		namespaces: useTestnet ? NAMESPACE_TEST : NAMESPACE_MAIN,
-		pairingTopic: undefined,
-		skipPairing: true
-	})
-	if (!provider.session) {
-		logger.info("new pairing");
-		await provider.pair(undefined);
+	let  namespaces = NAMESPACE_MAIN;
+	if (useDevnet) {
+		namespaces = NAMESPACE_DEVX;
 	}
-	await provider.enable();
-	logger.info(provider.session);
+	if (useTestnet) {
+		namespaces = NAMESPACE_TEST;
+	}
+
+	for (const ns in namespaces ) {
+		logger.info(`namespace=${ns} chains=${namespaces[ns].chains.join(",")}` );
+	}
 	try {
-		await withTimeout(provider.client.ping({
-			topic: provider.session!.topic
-		}), 5000);
+		await provider.connect({
+			namespaces: namespaces,
+			pairingTopic: undefined,
+			skipPairing: true
+		})
+		if (!provider.session) {
+			logger.info("new pairing");
+			await provider.pair(undefined);
+		}
+		await provider.enable();
+		logger.info(provider.session);
+		try {
+			await withTimeout(provider.client.ping({
+				topic: provider.session!.topic
+			}), 5000);
+		} catch (e) {
+			logger.error(e);
+			//await provider.pair(undefined);
+		}
 	} catch (e) {
 		logger.error(e);
-		//await provider.pair(undefined);
+		return
 	}
 	console.clear();
 	await displayMenu();

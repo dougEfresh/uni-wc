@@ -1,6 +1,6 @@
 import {Chain, network, SignAndSendSigner, TxHash} from "@wormhole-foundation/sdk";
 import {IContext, IEipSession, ISolanaSession} from "@uni-wc/provider";
-import {UnsignedTransaction} from "@wormhole-foundation/sdk-definitions";
+import {UnsignedTransaction} from "@wormhole-foundation/sdk";
 import {SolanaUnsignedTransaction} from "@wormhole-foundation/sdk-solana";
 
 import {Signer, Transaction} from "@solana/web3.js";

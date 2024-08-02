@@ -25,17 +25,23 @@ export const ALL_CHAINS: Chain[] = [
 	celoAlfajores,
 	optimism,
 	polygon,
-	polygonAmoy,
+	//polygonAmoy,
 	arbitrum,
 	celo,
 	zkSync,
 	cosmos,
-]
+];
 
 export const CHAINS: Map<string, Chain> = new Map(
 	ALL_CHAINS.map((item) => [item.id, item])
 );
 
-export const TEST_CHAINS: Chain[] = ALL_CHAINS.filter((c) => c.vchain.testnet);
+
+export const DEVX_CHAINS: Chain[] = [
+	sepolia,
+	solanadev,
+];
+
+export const SANDBOX_CHAINS: Chain[] = ALL_CHAINS.filter((c) => c.vchain.testnet);
 export const MAIN_CHAINS: Chain[] = ALL_CHAINS.filter((c) => !c.vchain.testnet);
 

@@ -116,7 +116,7 @@ export class UniversalProviderFactory {
 		return UniversalProviderFactory.session;
 	}
 
-	public static async  close()  {
+	public static async close()  {
 		let client = UniversalProviderFactory.providerOpts.client;
 		if (!client) {
 			return

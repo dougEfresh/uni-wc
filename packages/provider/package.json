@@ -18,12 +18,14 @@
   "license": "ISC",
   "dependencies": {
     "@uni-wc/chains": "workspace:*",
-    "viem": "*",
-    "@solana/web3.js": "*",
+    "viem": "^2.18.5",
+    "pino": "^7",
+    "pino-pretty": "^11.2.2",
+    "@solana/web3.js": "^1.95.2",
     "@walletconnect/logger": "*",
     "@walletconnect/universal-provider": "*",
     "@walletconnect/sign-client": "*",
-    "bs58": "*"
+    "bs58": "5.0.0"
   },
   "devDependencies": {
     "@walletconnect/types": "*",

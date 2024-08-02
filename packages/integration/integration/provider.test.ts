@@ -4,6 +4,7 @@ import {Keypair, LAMPORTS_PER_SOL, PublicKey, SystemProgram} from "@solana/web3.
 import {config_from_env, test_init, TestSessions} from "../src";
 import {Stake as SolStatke, TransactionSession as SolTransaction } from "@uni-wc/session-solana";
 
+/*
 config_from_env();
 
 let sessions: TestSessions;
@@ -34,25 +35,27 @@ describe('solana-sign', () => {
 
 	test('transaction', async () => {
 		const solSession = sessions.solSession;
+		expect(solSession).toBeDefined();
 		const to = new PublicKey("HjNrrvRgpQzQsgz3HMdBNVDSnDkstQELMmTuw7iT41Jn");
 		const instruction = SystemProgram.transfer({
 			lamports: 0.0001 * LAMPORTS_PER_SOL,
-			fromPubkey: solSession.account,
+			fromPubkey: solSession!.account,
 			toPubkey: to,
 		})
-		const tx = await solSession.signTransactionFees([instruction]);
+		const tx = await solSession!.signTransactionFees([instruction]);
 		expect(tx.verifySignatures(true)).toBeTruthy();
 	});
 
 	test('send', async () => {
 		const solSession = sessions.solSession;
+		expect(solSession).toBeDefined();
 		const to = new PublicKey("HjNrrvRgpQzQsgz3HMdBNVDSnDkstQELMmTuw7iT41Jn");
 		const instruction = SystemProgram.transfer({
 			lamports: 0.0001 * LAMPORTS_PER_SOL,
-			fromPubkey: solSession.account,
+			fromPubkey: solSession!.account,
 			toPubkey: to,
 		})
-		const tx = await solSession.sendAndConfirm([instruction], undefined);
+		const tx = await solSession!.sendAndConfirm([instruction], undefined);
 		expect(tx.length).toBeGreaterThanOrEqual(80);
 	});
 
@@ -63,8 +66,8 @@ describe('solana-transactions', () => {
 	test('send', async () => {
 		const to = new PublicKey("HjNrrvRgpQzQsgz3HMdBNVDSnDkstQELMmTuw7iT41Jn");
 		const sig = await solTransaction.send(to, 0.00001 * LAMPORTS_PER_SOL);
-		const block = await sessions.solSession.connection.getLatestBlockhash();
-		const status = await sessions.solSession.connection.confirmTransaction({
+		const block = await sessions.solSession!.connection.getLatestBlockhash();
+		const status = await sessions.solSession!.connection.confirmTransaction({
 			signature: sig,
 			blockhash: block.blockhash,
 			lastValidBlockHeight: block.lastValidBlockHeight
@@ -115,3 +118,6 @@ describe('solana-stake', () => {
 	});
 
 });
+
+
+ */

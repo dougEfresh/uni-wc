@@ -22,6 +22,7 @@ for (const envKey in process.env) {
 program
 	.option('--fireblocks <vaultId>', 'Enable Fireblocks and connect to this vaultId', parseFloat, -1)
 	.option('--testnet', 'Use testnet instead of mainnet', false)
+	.option('--devnet', 'Use devx namespaces', false)
 	.option('--dry-run', 'dry run mode (do not send)', false)
 	.option('--log-level <level>', 'debug|info|warn|error', "warn")
 	.parse(process.argv);

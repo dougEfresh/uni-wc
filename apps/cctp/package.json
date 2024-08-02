@@ -15,7 +15,7 @@
     "@uni-wc/chains": "workspace:*",
     "@uni-wc/session-solana": "workspace:*",
     "@uni-wc/provider": "workspace:*",
-    "pino": "*",
+    "pino": "7.11.0",
     "pino-pretty": "*"
   },
   "devDependencies": {

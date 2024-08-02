@@ -9,7 +9,6 @@ import {
 	TOKEN_PROGRAM_ID, createTransferInstruction
 } from "@solana/spl-token";
 import {PublicKey, TransactionInstruction} from "@solana/web3.js";
-import {type IKeyValueStorage} from "@walletconnect/keyvaluestorage";
 
 export interface TokenInfo {
 	tokenAccount: PublicKey,
@@ -27,28 +26,6 @@ interface JupToken {
 	logoURI: string;
 }
 
-class NoopStorage implements IKeyValueStorage {
-	getEntries<T = any>(): Promise<[string, T][]> {
-		return Promise.resolve([]);
-	}
-
-	getItem<T = any>(key: string): Promise<T | undefined> {
-		return Promise.resolve(undefined);
-	}
-
-	getKeys(): Promise<string[]> {
-		return Promise.resolve([]);
-	}
-
-	removeItem(key: string): Promise<void> {
-		return Promise.resolve(undefined);
-	}
-
-	setItem<T = any>(key: string, value: T): Promise<void> {
-		return Promise.resolve(undefined);
-	}
-
-}
 async function fetchTokens(): Promise<JupToken[]> {
 	/*
 	const response = await fetch('https://token.jup.ag/strict');
@@ -60,11 +37,11 @@ async function fetchTokens(): Promise<JupToken[]> {
 
 export class TokenManagement extends BaseSession{
 
-	readonly storage: IKeyValueStorage;
+	//readonly storage: IKeyValueStorage;
 
-	constructor(ctx: IContext, session: ISolanaSession, storage?: IKeyValueStorage| undefined) {
+	constructor(ctx: IContext, session: ISolanaSession) {
 		super(session, ctx, "token-management");
-		this.storage = !storage ? new NoopStorage() : storage;
+		//this.storage = !storage ? new NoopStorage() : storage;
 	}
 
 	async tokens(): Promise<TokenInfo[]> {

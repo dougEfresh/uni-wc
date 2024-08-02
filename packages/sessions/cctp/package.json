@@ -19,13 +19,15 @@
   "dependencies": {
     "@uni-wc/provider": "workspace:*",
     "@uni-wc/chains": "workspace:*",
-    "@solana/web3.js": "*",
-    "viem": "*",
-    "@walletconnect/logger": "*",
-    "@wormhole-foundation/sdk": "*",
-    "@wormhole-foundation/sdk-definitions": "*",
-    "@wormhole-foundation/sdk-solana": "*",
-    "@wormhole-foundation/sdk-evm": "*"
+    "@solana/web3.js": "1.95.2",
+    "viem": "2.18.5",
+    "@wormhole-foundation/sdk": "0.8.2",
+    "@wormhole-foundation/sdk-solana": "0.8.2",
+    "@wormhole-foundation/sdk-evm": "0.8.2"
+  },
+  "peerDependencies": {
+    "react-dom": "^18",
+    "pino": "^7"
   },
   "devDependencies": {
     "@walletconnect/universal-provider": "*",

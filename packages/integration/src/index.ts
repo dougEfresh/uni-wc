@@ -1,6 +1,14 @@
 import pino from "pino";
 import {Fireblocks, type Web3ConnectionsApiCreateRequest} from "@fireblocks/ts-sdk";
-import {baseSepolia, CHAINS, NAMESPACE_TEST, polygonAmoy, sepolia, optimismSepolia} from "@uni-wc/chains";
+import {
+	baseSepolia,
+	CHAINS,
+	NAMESPACE_TEST,
+	polygonAmoy,
+	sepolia,
+	optimismSepolia,
+	NAMESPACE_DEVX
+} from "@uni-wc/chains";
 import {UniversalProviderFactory, type ISolanaSession, type IEipSession, type IContext} from "@uni-wc/provider";
 import UniversalProvider from "@walletconnect/universal-provider";
 import dotenv from "dotenv";
@@ -28,11 +36,11 @@ export function config_from_env() {
 
 export interface TestSessions {
 	provider: UniversalProvider;
-	solSession: ISolanaSession;
+	solSession?: ISolanaSession;
 	sepoliaSession: IEipSession;
-	baseSepoliaSession: IEipSession;
-	polygonSepoliaSession: IEipSession;
-	opSepoliaSession: IEipSession;
+	baseSepoliaSession?: IEipSession;
+	polygonSepoliaSession?: IEipSession;
+	opSepoliaSession?: IEipSession;
 	ctx: IContext;
 }
 
@@ -95,7 +103,7 @@ export async function test_init(): Promise<TestSessions> {
 
 	const provider = await UniversalProviderFactory.getProvider();
 	await provider.connect({
-		namespaces: NAMESPACE_TEST,
+		namespaces: NAMESPACE_DEVX,
 		pairingTopic: undefined,
 		skipPairing: true
 	})
@@ -111,33 +119,26 @@ export async function test_init(): Promise<TestSessions> {
 	if (!_sepolia) {
 		throw new Error("no sepolia session found");
 	}
-	const _baseSepolia = sessions!.eip(baseSepolia.id);
-	if (!_baseSepolia) {
-		throw new Error("no sepolia session found");
-	}
-	const _polygonSepolia = sessions!.eip(polygonAmoy.id);
-	if (!_polygonSepolia) {
-		throw new Error("no polygon session found");
-	}
-	const _opSepolia = sessions!.eip(optimismSepolia.id);
-	if (!_opSepolia) {
-		throw new Error("no opSepolia session found");
-	}
-	const sepoliaSession = _sepolia!;
-	const baseSepoliaSession = _baseSepolia;
-	const opSepoliaSession = _opSepolia;
+	/*
 	const s = sessions.solana();
+
 	if (!s) {
 		throw new Error("no solana session found");
 	}
-	const solSession = s!;
+ */
+	const baseSepoliaSession = sessions!.eip(baseSepolia.id);
+	const polygonSepoliaSession = sessions!.eip(polygonAmoy.id);
+	const opSepoliaSession = sessions!.eip(optimismSepolia.id);
+	const sepoliaSession = _sepolia!;
+	//const solSession = s!;
+
 	return {
 		provider,
-		solSession,
+		solSession: sessions.solana(),
 		sepoliaSession,
 		baseSepoliaSession,
 		opSepoliaSession,
-		polygonSepoliaSession: _polygonSepolia,
+		polygonSepoliaSession,
 		ctx: {
 			dryRun: false,
 			logger: logger

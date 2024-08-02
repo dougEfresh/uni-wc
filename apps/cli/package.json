@@ -15,17 +15,19 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "dependencies": {
-    "@fireblocks/ts-sdk": "*",
+    "dependencies": {
+    "clipboardy": "^4.0.0",
+	"xdg-basedir": "^5.1.0",
+    "@fireblocks/ts-sdk": "^2.1.0",
     "@inquirer/prompts": "^5.0.4",
     "@inquirer/select": "^2.3.4",
-    "@jup-ag/api": "*",
+    "pino": "7.11.0",
+    "pino-pretty": "^11.2.2",
     "@solendprotocol/solend-sdk": "*",
-    "@solana/spl-token": "*",
+    "@solana/spl-token": "0.4.8",
     "@uni-wc/chains": "workspace:*",
     "@uni-wc/session-solana": "workspace:*",
     "@uni-wc/provider": "workspace:*",
-    "@walletconnect/keyvaluestorage": "*",
     "@walletconnect/universal-provider": "*",
     "@walletconnect/sign-client": "*",
     "bs58": "*",
@@ -34,8 +36,11 @@
     "qrcode-terminal": "*",
     "unstorage": "*",
     "viem": "*",
-    "xdg-basedir": "*",
-    "pino-pretty": "*"
+	"pino-pretty": "^11.2.2",
+   "@solana/spl-token": "^0.4.8",
+    "@solana/web3.js": "^1.95.1"
+
+
   },
   "devDependencies": {
     "@types/node": "*",

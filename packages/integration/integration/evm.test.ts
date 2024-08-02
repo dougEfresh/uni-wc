@@ -193,7 +193,7 @@ function sleep(ms: number): Promise<void> {
 describe('evm', () => {
 
 	test('transfer', async () => {
-		const session = sessions.baseSepoliaSession;
+		const session = sessions.sepoliaSession;
 		const pc = session.pc;
 		const balance = await pc.getBalance({
 			address: session.account,
@@ -202,12 +202,14 @@ describe('evm', () => {
 		console.log(`balance ${balance}`);
 		const request = await session.wc.prepareTransactionRequest({
 			account: session.account,
-			to: '0x3d69528383409EA07A8d68a9777cEaFC574D84b4',
+			to: '0xedD065e17a76BA4CE20Ce7935475c5F632e525d4',
+			//to: '0x3d69528383409EA07A8d68a9777cEaFC574D84b4',
 			value: parseEther('0.000001'),
 			chain: session.chain.vchain,
 			//maxFeePerGas: parseGwei('10'),
 			//maxPriorityFeePerGas: parseGwei('0.01'),
 		});
+		console.log("sending transaction");
 		const tx = {
 			account: session.account,
 			...request
@@ -217,14 +219,15 @@ describe('evm', () => {
 	});
 
 	test('usdc', async () => {
-		const pc = sessions.baseSepoliaSession.pc;
+		const session = sessions.sepoliaSession;
+		const pc = session.pc;
+		const wc = session.wc;
 		const balance = await pc.getBalance({
-			address: sessions.baseSepoliaSession.account,
+			address: session.account,
 		});
 		console.log(`balance ${balance}`);
-		const wc = sessions.baseSepoliaSession.wc;
 		await wc.switchChain({
-			id: sessions.baseSepoliaSession.chain.vchain.id
+			id: session.chain.vchain.id
 		});
 		const contract = getContract({
 			abi: abi,
@@ -232,14 +235,14 @@ describe('evm', () => {
 				public: pc,
 				wallet: wc,
 			},
-			address:  "0x036CbD53842c5426634e7929541eC2318f3dCF7e" as Address,
+			address:  "0x1c7D4B196Cb0C7B01d743Fbc6116a902379C7238" as Address,
 		}
-		)
+		);
 		const totalSupply = await contract.read.totalSupply();
 		expect(totalSupply).toBeDefined();
 		expect(totalSupply).toBeGreaterThan(0);
 		const amt = parseUnits("0.000001", 6);
-		const hash = await contract.write.transfer(['0x3d69528383409EA07A8d68a9777cEaFC574D84b4',amt]);
+		const hash = await contract.write.transfer(['0xedD065e17a76BA4CE20Ce7935475c5F632e525d4',amt]);
 		await sleep(7000);
 		const status = await pc.getTransaction({
 			hash: hash,

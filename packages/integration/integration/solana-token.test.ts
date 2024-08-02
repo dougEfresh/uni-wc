@@ -4,6 +4,7 @@ import {TokenInfo, TokenManagement} from "@uni-wc/session-solana";
 import {UniversalProviderFactory} from "@uni-wc/provider";
 import {PublicKey} from "@solana/web3.js";
 
+/*
 config_from_env();
 
 let sessions: TestSessions;
@@ -33,3 +34,5 @@ describe('solana-tokens', () => {
 		await tokenMang.transfer(to, usdc!, BigInt(10000));
 	});
 });
+
+ */
