@@ -1,10 +1,16 @@
+'use client';
 import Image from "next/image";
+import Pair from "@/components/Pair";
+import {useNamespace} from "@/contexts/NamespaceContext";
+import Namespace from "@/components/Namespace";
 
 export default function Home() {
+  const {namespace} = useNamespace();
+  //{ namespace === undefined ? <Namespace/> : <Pair/> }
   return (
     <main>
       <div>
-        <h2>Hello</h2>
+        <h1>whats up</h1>
       </div>
     </main>
   )

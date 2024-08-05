@@ -20,7 +20,7 @@
     "@uni-wc/chains": "workspace:*",
     "viem": "^2.18.5",
     "pino": "^7",
-    "pino-pretty": "^11.2.2",
+    "pino-pretty": "*",
     "@solana/web3.js": "^1.95.2",
     "@walletconnect/logger": "*",
     "@walletconnect/universal-provider": "*",

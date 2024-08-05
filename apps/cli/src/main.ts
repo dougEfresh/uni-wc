@@ -1,6 +1,6 @@
 import {UniversalProviderFactory} from "@uni-wc/provider";
 import {NAMESPACE_MAIN, NAMESPACE_TEST, NAMESPACE_DEVX} from "@uni-wc/chains";
-import UniversalProvider from "@walletconnect/universal-provider";
+import UniversalProvider, {type ConnectParams} from "@walletconnect/universal-provider";
 import {type SessionTypes} from "@walletconnect/types";
 import {xdgData} from 'xdg-basedir';
 import qr from 'qrcode-terminal';
@@ -21,18 +21,22 @@ async function handle_session_proposal(uri: string, fireblocksVaultId: number) {
 		});
 		console.log(uri);
 		if (fireblocksVaultId >= 0) {
-			const fb = new Fireblocks();
-			const web3 = await fb.web3Connections.create(<Web3ConnectionsApiCreateRequest>{
-				createConnectionRequest: {
-					vaultAccountId: 0,
-					feeLevel: "MEDIUM",
-					uri: uri,
-				}
-			});
-			await fb.web3Connections.submit({
-				id: web3.data.id,
-				respondToConnectionRequest: {approve: true}
-			});
+			try {
+				const fb = new Fireblocks();
+				const web3 = await fb.web3Connections.create(<Web3ConnectionsApiCreateRequest>{
+					createConnectionRequest: {
+						vaultAccountId: fireblocksVaultId,
+						feeLevel: "MEDIUM",
+						uri: uri,
+					}
+				});
+				await fb.web3Connections.submit({
+					id: web3.data.id,
+					respondToConnectionRequest: {approve: true}
+				});
+			} catch (e) {
+				console.error(e);
+			}
 		}
 }
 
@@ -45,13 +49,6 @@ export async function main()
 	const lvl: string = options.logLevel;
 	const dryRun: boolean = options.dryRun;
 
-/*
-	const logger = pino({
-		level: lvl,
-		timestamp: pino.stdTimeFunctions.isoTime,
-	}, transport);
-
-	*/
 
 	const logger = pino({
 		level: lvl,
@@ -86,6 +83,7 @@ export async function main()
 		client: undefined,
 		disableProviderPing: true,
 		logger: logger,
+		//logger: "debug",
 		metadata: {
 			name: "uni-walletconnect",
 			description: "just use walletconnect",
@@ -118,7 +116,7 @@ export async function main()
 		logger.info("subscription_created", JSON.stringify(obj));
 	});
 
-	let  namespaces = NAMESPACE_MAIN;
+	let  namespaces: ConnectParams = NAMESPACE_MAIN;
 	if (useDevnet) {
 		namespaces = NAMESPACE_DEVX;
 	}
@@ -126,15 +124,11 @@ export async function main()
 		namespaces = NAMESPACE_TEST;
 	}
 
-	for (const ns in namespaces ) {
-		logger.info(`namespace=${ns} chains=${namespaces[ns].chains.join(",")}` );
+	for (const ns in namespaces.namespaces ) {
+		logger.info(`namespace=${ns} chains=${namespaces.namespaces[ns].chains.join(",")}` );
 	}
 	try {
-		await provider.connect({
-			namespaces: namespaces,
-			pairingTopic: undefined,
-			skipPairing: true
-		})
+		await provider.connect(namespaces);
 		if (!provider.session) {
 			logger.info("new pairing");
 			await provider.pair(undefined);

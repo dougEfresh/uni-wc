@@ -23,7 +23,6 @@
     "@inquirer/select": "^2.3.4",
     "pino": "7.11.0",
     "pino-pretty": "^11.2.2",
-    "@solendprotocol/solend-sdk": "*",
     "@solana/spl-token": "0.4.8",
     "@uni-wc/chains": "workspace:*",
     "@uni-wc/session-solana": "workspace:*",

@@ -13,10 +13,19 @@
     "react-dom": "^18",
     "next": "14.2.5",
     "@uni-wc/chains": "workspace:*",
-    "@uni-wc/session-solana": "workspace:*",
+    "@uni-wc/session-cctp": "workspace:*",
     "@uni-wc/provider": "workspace:*",
-    "pino": "7.11.0",
-    "pino-pretty": "*"
+    "@walletconnect/core": "*",
+    "pino": "*",
+    "pino-pretty": "*",
+    "qrcode.react": "^3.1.0",
+    "@mui/material": "^5.16.6",
+    "@mui/material-nextjs": "^5.16.6",
+    "@mui/icons-material": "^5.16.6",
+    "@emotion/cache": "^11.13.0",
+    "@emotion/react": "^11.13.0",
+    "@emotion/styled": "^11.13.0",
+    "react-copy-to-clipboard": "^5.1.0"
   },
   "devDependencies": {
     "typescript": "^5",
@@ -26,6 +35,7 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "eslint": "^8",
-    "eslint-config-next": "14.2.5"
+    "eslint-config-next": "14.2.5",
+    "@types/react-copy-to-clipboard": "^5.0.7"
   }
 }

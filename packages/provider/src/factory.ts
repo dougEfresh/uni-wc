@@ -121,9 +121,11 @@ export class UniversalProviderFactory {
 		if (!client) {
 			return
 		}
+
 		if (client.core.relayer.connected) {
 			await client.core.relayer.transportClose();
 		}
+		await client.core.relayer.provider.disconnect();
 		client.core.events.removeAllListeners();
 		client.core.relayer.events.removeAllListeners();
 		client.core.heartbeat.stop();

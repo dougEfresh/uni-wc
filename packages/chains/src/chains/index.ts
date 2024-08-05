@@ -1,6 +1,7 @@
 export { solana, solanadev } from './solana';
 
 export { cosmos } from './cosmos';
+export { near, neartestnet } from './near';
 
 export {NAMESPACE_MAIN, NAMESPACE_TEST, NAMESPACE_DEVX } from './namespace';
 

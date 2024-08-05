@@ -13,13 +13,12 @@ const vcosmos = defineChain({
 	rpcUrls: {
 		public: {
 			http:  [
-				"https://api.mainnet-beta.solana.com",
-				"https://solana-api.projectserum.com",
+				"https://rpc.cosmos.network",
 			],
 			//webSocket: [],
 		},
 		default: {
-			http: ["https://api.mainnet-beta.solana.com"],
+			http: ["https://api.mainnet-beta.solana.com"]
 			//webSocket: ['wss://eth-rpc-acala.aca-api.network'],
 		},
 	},

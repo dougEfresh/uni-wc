@@ -17,9 +17,11 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "viem": "^2.18.5"
+    "viem": "^2.18.5",
+    "@walletconnect/universal-provider": "*"
   },
   "devDependencies": {
+    "@walletconnect/types": "*",
     "@babel/preset-env": "*",
     "@babel/preset-typescript": "*",
     "@babel/core": "*",

@@ -24,7 +24,7 @@ program
 	.option('--testnet', 'Use testnet instead of mainnet', false)
 	.option('--devnet', 'Use devx namespaces', false)
 	.option('--dry-run', 'dry run mode (do not send)', false)
-	.option('--log-level <level>', 'debug|info|warn|error', "warn")
+	.option('--log-level <level>', 'debug|info|warn|error', "info")
 	.parse(process.argv);
 
 await main()
