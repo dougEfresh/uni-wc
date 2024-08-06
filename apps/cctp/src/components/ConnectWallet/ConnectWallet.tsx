@@ -1,9 +1,9 @@
 import {useCallback, useEffect, useState} from 'react'
 import { Button, Fade, Menu, MenuItem } from '@mui/material'
 import {IEipSession, ISolanaSession } from "@uni-wc/provider";
-import {useSessionContext} from "@/contexts/SessionContext";
-import ConnectWalletDialog from "@/components/ConnectWallet/ConnectWalletDialog";
+
 import QRCodeDialog from "@/components/ConnectWallet/QrDialog";
+import {useChainContext} from "@/contexts/ChainContext";
 
 function getAddressAbbreviation(address: string): string {
   return address.slice(0, 6) + '...' + address.slice(-4)
@@ -12,7 +12,7 @@ function getAddressAbbreviation(address: string): string {
 const ConnectWallet = () => {
   const [evmSessions, setEvmSessions] = useState<IEipSession[]>([]);
   const [solanaSession, setSolanaSession] = useState<ISolanaSession>();
-  const { solana, evms } = useSessionContext();
+  const { established, chains }  = useChainContext();
   const [error, setError] = useState<Error>();
 
   const [isConnectWalletDialogOpen, setIsConnectWalletDialogOpen] =
@@ -46,13 +46,13 @@ const ConnectWallet = () => {
 
 
   useEffect(() => {
-    if (!solana) {
+    if (!established) {
       return
     }
-    setEvmSessions(evms);
-    setSolanaSession(solana);
+    // setEvmSessions(evms);
+    // setSolanaSession(solana);
     setIsConnectWalletDialogOpen(false)
-  }, [solana, evms, setEvmSessions, setSolanaSession, setIsConnectWalletDialogOpen]);
+  }, [established, setEvmSessions, setSolanaSession, setIsConnectWalletDialogOpen]);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
@@ -65,7 +65,7 @@ const ConnectWallet = () => {
 
   return (
     <>
-      {evmSessions.length > 0 ? (
+      {established ? (
         <Button
           id="connected-wallet-button"
           aria-controls={open ? 'connected-wallet-menu' : undefined}

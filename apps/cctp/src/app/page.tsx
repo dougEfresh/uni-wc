@@ -6,7 +6,7 @@ import Namespace from "@/components/Namespace";
 
 export default function Home() {
   return (
-    <main>
+
       <div className="item-center mx-auto flex max-w-4xl flex-col justify-center">
         <h1>Transfer USDC across chains</h1>
         <p className="mt-8 text-center text-xl">
@@ -23,7 +23,6 @@ export default function Home() {
           />
           */}
         </div>
-    </main>
   )
 }
 

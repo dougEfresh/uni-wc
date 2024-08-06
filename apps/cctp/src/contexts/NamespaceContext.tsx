@@ -4,7 +4,8 @@ import {ConnectParams} from "@walletconnect/universal-provider";
 import {NAMESPACE_MAIN, NAMESPACE_TEST} from "@uni-wc/chains";
 
 interface IContext {
-	namespace: ConnectParams | undefined
+	namespace: ConnectParams | undefined,
+	testnet: boolean,
 	setNamespace: (namespace: ConnectParams| undefined ) => void
 }
 
@@ -18,6 +19,7 @@ export const NamespaceContextProvider: FC<{ children: ReactNode }> = ({
 	const value: IContext = useMemo(() => (
 		{
 			namespace,
+			testnet: true,
 			setNamespace
 		}
 	), [namespace]);

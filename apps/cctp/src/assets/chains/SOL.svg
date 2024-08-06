@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 397.7 311.7" width="16" height="16">
+    <defs>
+        <linearGradient id="solana-gradient-1" x1="360.879" x2="141.213" y1="351.455" y2="-69.292" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#9945ff"/>
+            <stop offset=".19" stop-color="#7962e7"/>
+            <stop offset=".37" stop-color="#5f81ce"/>
+            <stop offset=".54" stop-color="#4da0b3"/>
+            <stop offset=".71" stop-color="#41b39d"/>
+            <stop offset=".85" stop-color="#2bcf82"/>
+            <stop offset="1" stop-color="#00ffa3"/>
+        </linearGradient>
+        <linearGradient id="solana-gradient-2" x1="264.829" x2="45.162" y1="401.601" y2="-19.146" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#9945ff"/>
+            <stop offset=".19" stop-color="#7962e7"/>
+            <stop offset=".37" stop-color="#5f81ce"/>
+            <stop offset=".54" stop-color="#4da0b3"/>
+            <stop offset=".71" stop-color="#41b39d"/>
+            <stop offset=".85" stop-color="#2bcf82"/>
+            <stop offset="1" stop-color="#00ffa3"/>
+        </linearGradient>
+        <linearGradient id="solana-gradient-3" x1="329.883" x2="110.217" y1="376.688" y2="-44.059" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#9945ff"/>
+            <stop offset=".19" stop-color="#7962e7"/>
+            <stop offset=".37" stop-color="#5f81ce"/>
+            <stop offset=".54" stop-color="#4da0b3"/>
+            <stop offset=".71" stop-color="#41b39d"/>
+            <stop offset=".85" stop-color="#2bcf82"/>
+            <stop offset="1" stop-color="#00ffa3"/>
+        </linearGradient>
+    </defs>
+    <g>
+        <path d="M61.7 106.1C63.8 104 67 103 70.3 103h324.8c6.2 0 9.4 7.5 5 11.9L337 173.8c-2.1 2.1-5.3 3.1-8.3 3.1H3.8c-6.2 0-9.4-7.5-5-11.9l62.9-59z" fill="url(#solana-gradient-1)"/>
+        <path d="M61.7 276.8C63.8 274.7 67 273.7 70.3 273.7h324.8c6.2 0 9.4 7.5 5 11.9L337 344.4c-2.1 2.1-5.3 3.1-8.3 3.1H3.8c-6.2 0-9.4-7.5-5-11.9l62.9-59.1z" fill="url(#solana-gradient-2)"/>
+        <path d="M335.1 191.5C332.9 193.6 329.7 194.6 326.5 194.6H1.8c-6.2 0-9.4-7.5-5-11.9l62.9-59c2.1-2.1 5.3-3.1 8.3-3.1h324.8c6.2 0 9.4 7.5 5 11.9l-62.9 59z" fill="url(#solana-gradient-3)"/>
+    </g>
+</svg>
